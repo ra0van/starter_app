@@ -18,7 +18,7 @@ class Facebook
     params = { 
       :access_token => @@access_token,
       :limit => 2000,
-      :date_preset =>"yesterday", 
+      #:date_preset =>"yesterday", 
       :fields => "name, id, created_time, campaign_id, account_id, adset_id" # TODO : Convert to enums & concat array to string
     }
     data = get(url, params)
@@ -31,13 +31,53 @@ class Facebook
     params = { 
       :access_token => @@access_token,
       :limit => 1000,
-      :date_preset =>"yesterday", 
+      #:date_preset =>"yesterday", 
       :fields => "name, id, created_time, campaign_id, account_id" # TODO : Convert to enums & concat array to string
     }
     data = get(url, params)
 
     return data 
-  end 
+  end   
+
+  def get_ad_campaigns(account_id)
+    url = @@base_url + '/' + @@version + '/' + @@account_id + "/" + "campaigns"
+    params = { 
+      :access_token => @@access_token,
+      :limit => 1000,
+      #:date_preset =>"yesterday", 
+      :fields => "name, id, created_time, campaign_id, account_id" # TODO : Convert to enums & concat array to string
+    }
+    data = get(url, params)
+
+    return data
+  end
+
+  def get_ad_accounts(account_id)
+    url = @@base_url + '/' + @@version + '/' + @@user_account_id + "/" + "adaccounts"
+    params = { 
+      :access_token => @@access_token,
+      :limit => 1000,
+      #:date_preset =>"yesterday", 
+      :fields => "name, id, account_id" # TODO : Convert to enums & concat array to string
+    }
+    data = get(url, params)
+
+    return data 
+  end
+
+  def get_account_insights(account_id)
+    url = @@base_url + '/' + @@version + '/' + @@account_id + "/" + "insights"
+
+    params = { 
+      :access_token => @@access_token,
+      :limit => 10000,
+      :date_preset =>"yesterday", 
+      :fields => "account_id,account_name,campaign_id,campaign_name,account_currency,reach,impressions,clicks,cpc,spend,inline_link_clicks,ctr,cost_per_unique_action_type,cpm,cpp",
+      :level => "account"
+    }
+    data = get(url, params)
+    return data
+  end
 
   def get(url, params)  
     data = []
@@ -72,4 +112,9 @@ class Facebook
 end 
 
 fb = Facebook.new
-fb.get_ad_sets("act_202330961584003")
+#fb.get_ad_accounts("236247562146310")
+#fb.get_ad_campaigns("act_202330961584003")
+#fb.get_ad_sets("act_202330961584003")
+#fb.get_ads("act_202330961584003")
+data = fb.get_account_insights("act_202330961584003")
+puts data
