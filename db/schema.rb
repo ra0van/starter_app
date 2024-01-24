@@ -53,7 +53,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_22_064126) do
     t.string "ad_account_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["ad_campaign_id", "ad_account_id"], name: "index_ad_campaigns_on_ad_campaign_id_and_ad_account_id", unique: true
+    t.index ["ad_account_id", "ad_campaign_id"], name: "index_ad_campaigns_on_ad_account_id_and_ad_campaign_id", unique: true
   end
 
   create_table "ad_campaigns_metrics", force: :cascade do |t|
@@ -87,7 +87,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_22_064126) do
     t.string "ad_account_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["ad_campaign_id", "ad_account_id"], name: "index_ad_sets_on_ad_campaign_id_and_ad_account_id"
+    t.index ["ad_account_id", "ad_campaign_id"], name: "index_ad_sets_on_ad_account_id_and_ad_campaign_id"
     t.index ["ad_set_id"], name: "index_ad_sets_on_ad_set_id", unique: true
   end
 
@@ -120,8 +120,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_22_064126) do
     t.string "ad_account_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["ad_account_id", "ad_set_id"], name: "index_ads_on_ad_account_id_and_ad_set_id"
     t.index ["ad_id"], name: "index_ads_on_ad_id", unique: true
-    t.index ["ad_set_id", "ad_account_id"], name: "index_ads_on_ad_set_id_and_ad_account_id"
   end
 
   create_table "ads_metrics", force: :cascade do |t|

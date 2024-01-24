@@ -13,7 +13,7 @@ class CreateAdSets < ActiveRecord::Migration[7.1]
       t.timestamps
 
       t.index :ad_set_id, unique: true
-      t.index [:ad_campaign_id, :ad_account_id] 
+      t.index [:ad_account_id, :ad_campaign_id] 
     end
 
     create_table :ad_sets_metrics do |t|
