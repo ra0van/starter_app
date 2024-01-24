@@ -1,20 +1,20 @@
 class CreateAds < ActiveRecord::Migration[7.1]
   def change
     create_table :ads, :id => false, primary_key: :ad_id do |t|
-      t.string          :ad_id, null: false
-      t.string          :ad_name
-      t.string          :ad_type
-      t.string          :ad_format
-      t.datetime        :ad_start_date
-      t.string          :ad_set_id, null: false
-      t.string          :ad_account_id, null: false
+      t.string          :id, null: false
+      t.string          :name
+      t.string          :type
+      t.string          :format
+      t.datetime        :start_date
+      t.string          :adset_id, null: false
+      t.string          :account_id, null: false
       t.timestamps
 
-      t.index :ad_id, unique: true
-      t.index [:ad_set_id, :ad_account_id]
+      t.index :id, unique: true
+      t.index [:account_id, :id]
     end
 
-    create_table :ads_metrics do |t|
+    create_table :ad_metrics do |t|
       t.integer     :clicks
       t.float       :ctr
       t.integer     :link_clicks
@@ -26,11 +26,11 @@ class CreateAds < ActiveRecord::Migration[7.1]
       t.float       :spend
       t.datetime    :event_date, null: false
       t.string      :ad_id, null: false
-      t.string      :ad_account_id, null: false
+      t.string      :account_id, null: false
       t.timestamps
 
       t.index [:ad_id, :event_date], unique: true
-      t.index [:ad_account_id, :event_date]
+      t.index [:account_id, :event_date]
     end
   end
 end
