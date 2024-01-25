@@ -19,7 +19,7 @@ class CreateAds < ActiveRecord::Migration[7.1]
       t.float       :ctr
       t.integer     :link_clicks
       t.float       :linl_clicks_ctr
-      t.float       :cost_per_link_clicks
+      t.float       :cost_per_link_clicks 
       t.integer     :comments
       t.integer     :impressions
       t.integer     :likes

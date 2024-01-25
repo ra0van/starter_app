@@ -79,6 +79,22 @@ class Facebook
     return data
   end
 
+  def get_ad_insights(account_id)
+
+    url = @@base_url + '/' + @@version + '/' + @@account_id + "/" + "insights"
+
+    params = { 
+      :access_token => @@access_token,
+      :limit => 10000,
+      :date_preset =>"yesterday", 
+      :fields => "account_id,account_name,account_currency,reach,impressions,clicks,cpc,spend,inline_link_clicks,ctr,ad_id,cpm,cpp",
+      :time_increment => 1,
+      :level => "ad"
+    }
+    data = get(url, params)
+    return data
+  end
+
   def get(url, params)  
     data = []
     continue = true 
@@ -111,10 +127,3 @@ class Facebook
 
 end 
 
-fb = Facebook.new
-#fb.get_ad_accounts("236247562146310")
-#fb.get_ad_campaigns("act_202330961584003")
-#fb.get_ad_sets("act_202330961584003")
-#fb.get_ads("act_202330961584003")
-data = fb.get_account_insights("act_202330961584003")
-puts data
