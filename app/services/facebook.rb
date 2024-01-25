@@ -152,7 +152,7 @@ class Facebook
       if parsed_response['paging'].key? 'next'
         after = parsed_response['paging']['cursors']['after']
         params['after'] = after
-      else 
+      else
         continue = false
       end
 
@@ -171,3 +171,4 @@ class Facebook
     { since: since_date, until: until_date }.to_json
   end
 end
+
