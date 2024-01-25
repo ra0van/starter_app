@@ -38,4 +38,23 @@ class Transform
    metrics.each { |x| puts x.inspect }
 
  end
+
+ def transform_ad_sets(data)
+   adsets = data.map{ |set|
+     {
+       ad_set_id: set["id"],
+       ad_set_name: set["name"],
+       ad_set_goal: set["optimization_goal"],
+       ad_set_daily_budget: set["daily_budget"],
+       ad_set_lifetime_budget: set["lifetime_budget"],
+       ad_set_billing_event: set["billing_event"],
+       ad_campaign_id: set["campaign_id"],
+       ad_account_id: set["account_id"],
+     }
+   }
+
+  AdSets.upsert_all(adsets, unique_by: :ad_set_id)
+ end
+
+
 end
