@@ -16,7 +16,8 @@ class Facebook
   @@req_handler = HTTP::RequestHandler.new
 
   def get_ads(account_id)
-    url = @@base_url + '/' + @@version + '/' + account_id + '/' + 'ads'
+    path_params = [@@base_url, @@version, account_id, 'ads']
+    url = path_params.join('/')
     params = {
       access_token: @@access_token,
       limit: 2000,
@@ -28,7 +29,8 @@ class Facebook
   end
 
   def get_ad_sets(account_id)
-    url = @@base_url + "/" + @@version + "/" + account_id + "/" + 'adsets'
+    path_params = [@@base_url, @@version, account_id, 'adsets']
+    url = path_params.join('/')
     params = {
       access_token: @@access_token,
       limit: 1000,
@@ -40,7 +42,8 @@ class Facebook
   end
 
   def get_ad_campaigns(account_id)
-    url = @@base_url + '/' + @@version + '/' + account_id + '/' + 'campaigns'
+    path_params = [@@base_url, @@version, account_id, 'campaigns']
+    url = path_params.join('/')
     params = {
       access_token: @@access_token,
       limit: 1000,
@@ -52,25 +55,28 @@ class Facebook
   end
 
   def get_ad_accounts(user_account_id)
-    url = @@base_url + '/' + @@version + '/' + user_account_id + '/' + 'adaccounts'
+    path_params = [@@base_url, @@version, user_account_id, 'adaccounts']
+    url = path_params.join('/')
     params = {
       access_token: @@access_token,
       limit: 1000,
       # date_preset:'yesterday',
       # TODO : Convert to enums & concat array to string
-      fields: 'name, id, account_id'
+      fields: 'name, id, currency'
     }
     get(url, params)
   end
 
   def get_account_insights(account_id)
-    url = @@base_url + '/' + @@version + '/' + account_id + '/' + 'insights'
+    path_params = [@@base_url, @@version, account_id, 'insights']
+    url = path_params.join('/')
 
     params = {
       access_token: @@access_token,
-      limit: 10000,
-      date_preset:'yesterday',
+      limit: 10_000,
+      date_preset: 'yesterday',
       fields: 'account_id,account_name,campaign_id,campaign_name,account_currency,reach,impressions,clicks,cpc,spend,inline_link_clicks,ctr,cost_per_unique_action_type,cpm,cpp',
+      time_increment: 1,
       level: 'account'
     }
     get(url, params)
@@ -78,7 +84,6 @@ class Facebook
 
   def get_ad_insights(account_id)
     path_params = [@@base_url, @@version, account_id, 'insights']
-    #url = @@base_url + '/' + @@version + '/' + account_id + '/' + 'insights'
     url = path_params.join('/')
 
     params = {
