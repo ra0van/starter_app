@@ -3,6 +3,5 @@
 require 'date'
 
 class Query
-
 end
 
