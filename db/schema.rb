@@ -15,14 +15,14 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_22_064126) do
   enable_extension "plpgsql"
 
   create_table "ad_accounts", id: false, force: :cascade do |t|
-    t.string "ad_account_id", null: false
-    t.string "ad_account_name"
-    t.string "ad_account_currency"
+    t.string "id", null: false
+    t.string "name"
+    t.string "currency"
     t.datetime "stop_date"
     t.bigint "users_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["ad_account_id"], name: "index_ad_accounts_on_ad_account_id", unique: true
+    t.index ["id"], name: "index_ad_accounts_on_id", unique: true
     t.index ["users_id"], name: "index_ad_accounts_on_users_id"
   end
 
@@ -37,23 +37,23 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_22_064126) do
     t.integer "likes"
     t.float "spend"
     t.datetime "event_date", null: false
-    t.string "ad_account_id", null: false
+    t.string "account_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["ad_account_id", "event_date"], name: "index_ad_accounts_metrics_on_ad_account_id_and_event_date", unique: true
+    t.index ["account_id", "event_date"], name: "index_ad_accounts_metrics_on_account_id_and_event_date", unique: true
   end
 
   create_table "ad_campaigns", id: false, force: :cascade do |t|
-    t.string "ad_campaign_id", null: false
-    t.string "ad_campaign_name"
-    t.string "ad_campaign_objective"
-    t.datetime "ad_campaign_startdate"
-    t.integer "ad_campaign_lifetime_budget"
-    t.string "ad_campaign_budgeting_type"
-    t.string "ad_account_id", null: false
+    t.string "id", null: false
+    t.string "name"
+    t.string "objective"
+    t.datetime "startdate"
+    t.integer "lifetime_budget"
+    t.string "budgeting_type"
+    t.string "account_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["ad_campaign_id", "ad_account_id"], name: "index_ad_campaigns_on_ad_campaign_id_and_ad_account_id", unique: true
+    t.index ["account_id", "id"], name: "index_ad_campaigns_on_account_id_and_id", unique: true
   end
 
   create_table "ad_campaigns_metrics", force: :cascade do |t|
@@ -67,28 +67,28 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_22_064126) do
     t.integer "likes"
     t.float "spend"
     t.datetime "event_date", null: false
-    t.string "ad_campaign_id", null: false
-    t.string "ad_account_id", null: false
+    t.string "campaign_id", null: false
+    t.string "account_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["ad_account_id", "event_date"], name: "index_ad_campaigns_metrics_on_ad_account_id_and_event_date"
-    t.index ["ad_campaign_id", "event_date"], name: "index_ad_campaigns_metrics_on_ad_campaign_id_and_event_date", unique: true
+    t.index ["account_id", "event_date"], name: "index_ad_campaigns_metrics_on_account_id_and_event_date"
+    t.index ["campaign_id", "event_date"], name: "index_ad_campaigns_metrics_on_campaign_id_and_event_date", unique: true
   end
 
   create_table "ad_sets", id: false, force: :cascade do |t|
-    t.string "ad_set_id", null: false
-    t.string "ad_set_name"
-    t.string "ad_set_goal"
-    t.datetime "ad_set_start_date"
-    t.integer "ad_set_daily_budget"
-    t.integer "ad_set_lifetime_budget"
-    t.string "ad_set_billing_event"
-    t.string "ad_campaign_id", null: false
-    t.string "ad_account_id", null: false
+    t.string "id", null: false
+    t.string "name"
+    t.string "goal"
+    t.datetime "date"
+    t.integer "daily_budget"
+    t.integer "lifetime_budget"
+    t.string "billing_event"
+    t.string "campaign_id", null: false
+    t.string "account_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["ad_campaign_id", "ad_account_id"], name: "index_ad_sets_on_ad_campaign_id_and_ad_account_id"
-    t.index ["ad_set_id"], name: "index_ad_sets_on_ad_set_id", unique: true
+    t.index ["account_id", "campaign_id"], name: "index_ad_sets_on_account_id_and_campaign_id"
+    t.index ["id"], name: "index_ad_sets_on_id", unique: true
   end
 
   create_table "ad_sets_metrics", force: :cascade do |t|
@@ -102,26 +102,26 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_22_064126) do
     t.integer "likes"
     t.float "spend"
     t.datetime "event_date", null: false
-    t.string "ad_set_id", null: false
-    t.string "ad_account_id", null: false
+    t.string "adset_id", null: false
+    t.string "account_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["ad_account_id", "event_date"], name: "index_ad_sets_metrics_on_ad_account_id_and_event_date"
-    t.index ["ad_set_id", "event_date"], name: "index_ad_sets_metrics_on_ad_set_id_and_event_date", unique: true
+    t.index ["account_id", "event_date"], name: "index_ad_sets_metrics_on_account_id_and_event_date"
+    t.index ["adset_id", "event_date"], name: "index_ad_sets_metrics_on_adset_id_and_event_date", unique: true
   end
 
   create_table "ads", id: false, force: :cascade do |t|
-    t.string "ad_id", null: false
-    t.string "ad_name"
-    t.string "ad_type"
-    t.string "ad_format"
-    t.datetime "ad_start_date"
-    t.string "ad_set_id", null: false
-    t.string "ad_account_id", null: false
+    t.string "id", null: false
+    t.string "name"
+    t.string "type"
+    t.string "format"
+    t.datetime "start_date"
+    t.string "adset_id", null: false
+    t.string "account_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["ad_id"], name: "index_ads_on_ad_id", unique: true
-    t.index ["ad_set_id", "ad_account_id"], name: "index_ads_on_ad_set_id_and_ad_account_id"
+    t.index ["account_id", "id"], name: "index_ads_on_account_id_and_id"
+    t.index ["id"], name: "index_ads_on_id", unique: true
   end
 
   create_table "ads_metrics", force: :cascade do |t|
@@ -136,10 +136,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_22_064126) do
     t.float "spend"
     t.datetime "event_date", null: false
     t.string "ad_id", null: false
-    t.string "ad_account_id", null: false
+    t.string "account_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["ad_account_id", "event_date"], name: "index_ads_metrics_on_ad_account_id_and_event_date"
+    t.index ["account_id", "event_date"], name: "index_ads_metrics_on_account_id_and_event_date"
     t.index ["ad_id", "event_date"], name: "index_ads_metrics_on_ad_id_and_event_date", unique: true
   end
 

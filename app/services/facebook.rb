@@ -1,129 +1,124 @@
-require_relative 'request_handler' 
+# frozen_string_literal: true
+
+require_relative 'request_handler'
 require 'json'
 
+# Class to interact with Facebook Ads API
 class Facebook
-
   @@access_token = 'EAAKDX99BZAz4BO75vjcOZCaPL2NheZCcQYXskZB1ag6hn7hD70DtvsQf99V2tXxXg8cJDMby8ZABxvK2QhfPAi0WA9drlZBEzZCZAdraKXTOjYI7tzyWzSn1Lt0PxXdUtADzaG7mfZAidIRZAdDIPS6fGpBxyEvZC99rxLfPBQDh3sc015VOENmCHAb7M0S39gzDu0x'
   @@app_secret = '4fc406efd8e284f04bc46afa6fba6305'
 
-  @@base_url = "https://graph.facebook.com/"
-  @@user_account_id = "236247562146310" 
-  @@account_id = "act_202330961584003"
-  @@version   = "v18.0"
+  @@base_url = 'https://graph.facebook.com/'
+  @@user_account_id = '236247562146310'
+  @@account_id = 'act_202330961584003'
+  @@version = 'v18.0'
 
-  @@reqHandler = HTTP::RequestHandler.new
+  @@req_handler = HTTP::RequestHandler.new
 
   def get_ads(account_id)
-    url = @@base_url + '/' + @@version + '/' + @@account_id + "/" + "ads"
-    params = { 
-      :access_token => @@access_token,
-      :limit => 2000,
-      #:date_preset =>"yesterday", 
-      :fields => "name, id, created_time, campaign_id, account_id, adset_id" # TODO : Convert to enums & concat array to string
+    url = @@base_url + '/' + @@version + '/' + account_id + '/' + 'ads'
+    params = {
+      access_token: @@access_token,
+      limit: 2000,
+      # date_preset:'yesterday',
+      # TODO : Convert to enums & concat array to string
+      fields: 'name, id, created_time, campaign_id, account_id, adset_id'
     }
-    data = get(url, params)
-
-    return data 
-  end 
-
-  def get_ad_sets(account_id)
-    url = @@base_url + '/' + @@version + '/' + @@account_id + "/" + "adsets"
-    params = { 
-      :access_token => @@access_token,
-      :limit => 1000,
-      #:date_preset =>"yesterday", 
-      :fields => "name, id, created_time, campaign_id, account_id" # TODO : Convert to enums & concat array to string
-    }
-    data = get(url, params)
-
-    return data 
-  end   
-
-  def get_ad_campaigns(account_id)
-    url = @@base_url + '/' + @@version + '/' + @@account_id + "/" + "campaigns"
-    params = { 
-      :access_token => @@access_token,
-      :limit => 1000,
-      #:date_preset =>"yesterday", 
-      :fields => "name, id, created_time, campaign_id, account_id" # TODO : Convert to enums & concat array to string
-    }
-    data = get(url, params)
-
-    return data
+    get(url, params)
   end
 
-  def get_ad_accounts(account_id)
-    url = @@base_url + '/' + @@version + '/' + @@user_account_id + "/" + "adaccounts"
-    params = { 
-      :access_token => @@access_token,
-      :limit => 1000,
-      #:date_preset =>"yesterday", 
-      :fields => "name, id, account_id" # TODO : Convert to enums & concat array to string
+  def get_ad_sets(account_id)
+    url = @@base_url + "/" + @@version + "/" + account_id + "/" + 'adsets'
+    params = {
+      access_token: @@access_token,
+      limit: 1000,
+      # date_preset:'yesterday',
+      # TODO : Convert to enums & concat array to string
+      fields: 'name, id, created_time, campaign_id, account_id'
     }
-    data = get(url, params)
+    get(url, params)
+  end
 
-    return data 
+  def get_ad_campaigns(account_id)
+    url = @@base_url + '/' + @@version + '/' + account_id + '/' + 'campaigns'
+    params = {
+      access_token: @@access_token,
+      limit: 1000,
+      # date_preset:'yesterday',
+      # TODO : Convert to enums & concat array to string
+      fields: 'name, id, created_time, campaign_id, account_id'
+    }
+    get(url, params)
+  end
+
+  def get_ad_accounts(user_account_id)
+    url = @@base_url + '/' + @@version + '/' + user_account_id + '/' + 'adaccounts'
+    params = {
+      access_token: @@access_token,
+      limit: 1000,
+      # date_preset:'yesterday',
+      # TODO : Convert to enums & concat array to string
+      fields: 'name, id, account_id'
+    }
+    get(url, params)
   end
 
   def get_account_insights(account_id)
-    url = @@base_url + '/' + @@version + '/' + @@account_id + "/" + "insights"
+    url = @@base_url + '/' + @@version + '/' + account_id + '/' + 'insights'
 
-    params = { 
-      :access_token => @@access_token,
-      :limit => 10000,
-      :date_preset =>"yesterday", 
-      :fields => "account_id,account_name,campaign_id,campaign_name,account_currency,reach,impressions,clicks,cpc,spend,inline_link_clicks,ctr,cost_per_unique_action_type,cpm,cpp",
-      :level => "account"
+    params = {
+      access_token: @@access_token,
+      limit: 10000,
+      date_preset:'yesterday',
+      fields: 'account_id,account_name,campaign_id,campaign_name,account_currency,reach,impressions,clicks,cpc,spend,inline_link_clicks,ctr,cost_per_unique_action_type,cpm,cpp',
+      level: 'account'
     }
-    data = get(url, params)
-    return data
+    get(url, params)
   end
 
   def get_ad_insights(account_id)
+    path_params = [@@base_url, @@version, account_id, 'insights']
+    #url = @@base_url + '/' + @@version + '/' + account_id + '/' + 'insights'
+    url = path_params.join('/')
 
-    url = @@base_url + '/' + @@version + '/' + @@account_id + "/" + "insights"
-
-    params = { 
-      :access_token => @@access_token,
-      :limit => 10000,
-      :date_preset =>"yesterday", 
-      :fields => "account_id,account_name,account_currency,reach,impressions,clicks,cpc,spend,inline_link_clicks,ctr,ad_id,cpm,cpp",
-      :time_increment => 1,
-      :level => "ad"
+    params = {
+      access_token: @@access_token,
+      limit: 10_000,
+      date_preset: 'yesterday',
+      fields: 'account_id,account_name,account_currency,reach,impressions,clicks,cpc,spend,inline_link_clicks,ctr,ad_id,cpm,cpp',
+      time_increment: 1,
+      level: 'ad'
     }
-    data = get(url, params)
-    return data
+    get(url, params)
   end
 
-  def get(url, params)  
+  def get(url, params)
     data = []
-    continue = true 
+    continue = true
     loop do
-      puts 'Sending Request : GET : ' + url 
-      response = @@reqHandler.send_get_request(url, params)
+      puts 'Sending Request : GET : ' + url
+      response = @@req_handler.send_get_request(url, params)
 
-      if response.code == "200"
+      if response.code == '200'
         parsed_response = JSON.parse response.body
-      else 
+      else
         puts response.code
         puts response
-        raise Exception.new "Failed to fetch data"
+        raise Exception.new 'Failed to fetch data'
       end
 
-      data = data + parsed_response['data']
+      data += parsed_response['data']
 
-      if parsed_response['paging'].has_key? 'next'
+      if parsed_response['paging'].key? 'next'
         after = parsed_response['paging']['cursors']['after']
         params['after'] = after
-      else 
+      else
         continue = false
       end
 
       break if continue == false
     end
-    puts "Fetched " + data.length.to_s + " records"
-    return data
-  end 
-
-end 
-
+    puts 'Fetched ' + data.length.to_s + ' records'
+    data
+  end
+end

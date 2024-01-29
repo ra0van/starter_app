@@ -1,0 +1,2 @@
+class AdAccounts < ApplicationRecord
+end
