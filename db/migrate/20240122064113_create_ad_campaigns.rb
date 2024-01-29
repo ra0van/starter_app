@@ -10,10 +10,11 @@ class CreateAdCampaigns < ActiveRecord::Migration[7.1]
       t.string        :account_id, null: false
       t.timestamps
 
+      t.index :id, unique: true
       t.index [:account_id, :id], unique: true
     end
 
-    create_table :ad_campaigns_metrics do |t|
+    create_table :adcampaign_metrics do |t|
       t.integer     :clicks
       t.float       :ctr
       t.integer     :link_clicks

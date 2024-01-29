@@ -1,2 +1,0 @@
-class AdsMetrics < ApplicationRecord
-end

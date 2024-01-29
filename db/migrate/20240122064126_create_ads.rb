@@ -14,7 +14,7 @@ class CreateAds < ActiveRecord::Migration[7.1]
       t.index [:account_id, :id]
     end
 
-    create_table :ads_metrics do |t|
+    create_table :ad_metrics do |t|
       t.integer     :clicks
       t.float       :ctr
       t.integer     :link_clicks

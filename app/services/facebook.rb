@@ -46,10 +46,10 @@ class Facebook
     url = path_params.join('/')
     params = {
       access_token: @@access_token,
-      limit: 1000,
+      limit: 1_000,
       # date_preset:'yesterday',
       # TODO : Convert to enums & concat array to string
-      fields: 'name, id, created_time, campaign_id, account_id'
+      fields: 'objective,name,id,buying_type,daily_budget,lifetime_budget,start_time,account_id,adsets.fields(daily_budget,lifetime_budget),budgeting_type'
     }
     get(url, params)
   end
@@ -59,7 +59,7 @@ class Facebook
     url = path_params.join('/')
     params = {
       access_token: @@access_token,
-      limit: 1000,
+      limit: 1_000,
       # date_preset:'yesterday',
       # TODO : Convert to enums & concat array to string
       fields: 'name, id, currency'
@@ -74,10 +74,43 @@ class Facebook
     params = {
       access_token: @@access_token,
       limit: 10_000,
-      date_preset: 'yesterday',
-      fields: 'account_id,account_name,campaign_id,campaign_name,account_currency,reach,impressions,clicks,cpc,spend,inline_link_clicks,ctr,cost_per_unique_action_type,cpm,cpp',
+      # date_preset: 'last_7d',
+      time_range: get_timerange,
+      fields: 'account_id,reach,impressions,clicks,cpc,spend,inline_link_clicks,ctr,cost_per_unique_action_type,cpm,cpp',
       time_increment: 1,
       level: 'account'
+    }
+    get(url, params)
+  end
+
+  def get_campaign_insights(account_id)
+    path_params = [@@base_url, @@version, account_id, 'insights']
+    url = path_params.join('/')
+
+    params = {
+      access_token: @@access_token,
+      limit: 10_000,
+      # date_preset: 'yesterday',
+      time_range: get_timerange,
+      fields: 'account_id,account_name,campaign_id,campaign_name,account_currency,reach,impressions,clicks,cpc,spend,inline_link_clicks',
+      time_increment: 1,
+      level: 'campaign'
+    }
+    get(url, params)
+  end
+
+  def get_adset_insights(account_id)
+    path_params = [@@base_url, @@version, account_id, 'insights']
+    url = path_params.join('/')
+
+    params = {
+      access_token: @@access_token,
+      limit: 10_000,
+      # date_preset: 'yesterday',
+      time_range: get_timerange,
+      fields: 'account_id,account_currency,reach,impressions,clicks,cpc,spend,inline_link_clicks,adset_id',
+      time_increment: 1,
+      level: 'adset'
     }
     get(url, params)
   end
@@ -89,7 +122,8 @@ class Facebook
     params = {
       access_token: @@access_token,
       limit: 10_000,
-      date_preset: 'yesterday',
+      # date_preset: 'yesterday',
+      time_range: get_timerange,
       fields: 'account_id,account_name,account_currency,reach,impressions,clicks,cpc,spend,inline_link_clicks,ctr,ad_id,cpm,cpp',
       time_increment: 1,
       level: 'ad'
@@ -102,13 +136,14 @@ class Facebook
     continue = true
     loop do
       puts 'Sending Request : GET : ' + url
+      puts params
       response = @@req_handler.send_get_request(url, params)
 
       if response.code == '200'
         parsed_response = JSON.parse response.body
       else
         puts response.code
-        puts response
+        puts response.body
         raise Exception.new 'Failed to fetch data'
       end
 
@@ -125,5 +160,14 @@ class Facebook
     end
     puts 'Fetched ' + data.length.to_s + ' records'
     data
+  end
+
+  # TODO : take range as param & Convert
+  def get_timerange
+    today = Date.today
+    since_date = (today - 30).strftime('%Y-%m-%d')
+    until_date = (today - 3).strftime('%Y-%m-%d')
+
+    { since: since_date, until: until_date }.to_json
   end
 end

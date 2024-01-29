@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "#{Rails.root}/app/services/facebook.rb"
 require "#{Rails.root}/app/services/transform.rb"
 
@@ -8,18 +10,18 @@ namespace :Facebook do
 
     tr = Transform.new
 
-    # data = fb.get_ad_campaigns("act_202330961584003")
-    data = fb.get_ad_sets('act_202330961584003')
-    tr.transform_ad_sets(data)
+    tr.transform_ad_accounts(fb.get_ad_accounts('236247562146310'))
+    tr.transform_ad_campaigns(fb.get_ad_campaigns('act_202330961584003'))
+    tr.transform_ad_sets(fb.get_ad_sets('act_202330961584003'))
+    tr.transform_ads(fb.get_ads('act_202330961584003'))
 
-    data = fb.get_ads('act_202330961584003')
-    tr.transform_ads(data)
-
-    data = fb.get_ad_insights('act_202330961584003')
-    tr.transform_ad_insights(data)
+    tr.transform_adaccount_insighs(fb.get_account_insights('act_202330961584003'))
+    tr.transform_adcampaign_insights(fb.get_campaign_insights('act_202330961584003'))
+    tr.transform_adset_insights(fb.get_adset_insights('act_202330961584003'))
+    tr.transform_ad_insights(fb.get_ad_insights('act_202330961584003'))
 
     ActiveRecord::Base.connection.instance_variable_set :@logger, Logger.new($stdout)
-    ActiveRecord::Base.logger = nil #Logger.new(STDOUT)
+    ActiveRecord::Base.logger = nil # Logger.new(STDOUT)
 
     # tr.transform_ad_sets(data)
   end

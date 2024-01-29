@@ -26,23 +26,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_22_064126) do
     t.index ["users_id"], name: "index_ad_accounts_on_users_id"
   end
 
-  create_table "ad_accounts_metrics", force: :cascade do |t|
-    t.integer "clicks"
-    t.float "ctr"
-    t.integer "link_clicks"
-    t.float "linl_clicks_ctr"
-    t.float "cost_per_link_clicks"
-    t.integer "comments"
-    t.integer "impressions"
-    t.integer "likes"
-    t.float "spend"
-    t.datetime "event_date", null: false
-    t.string "account_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["account_id", "event_date"], name: "index_ad_accounts_metrics_on_account_id_and_event_date", unique: true
-  end
-
   create_table "ad_campaigns", id: false, force: :cascade do |t|
     t.string "id", null: false
     t.string "name"
@@ -54,9 +37,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_22_064126) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["account_id", "id"], name: "index_ad_campaigns_on_account_id_and_id", unique: true
+    t.index ["id"], name: "index_ad_campaigns_on_id", unique: true
   end
 
-  create_table "ad_campaigns_metrics", force: :cascade do |t|
+  create_table "ad_metrics", force: :cascade do |t|
     t.integer "clicks"
     t.float "ctr"
     t.integer "link_clicks"
@@ -67,12 +51,12 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_22_064126) do
     t.integer "likes"
     t.float "spend"
     t.datetime "event_date", null: false
-    t.string "campaign_id", null: false
+    t.string "ad_id", null: false
     t.string "account_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["account_id", "event_date"], name: "index_ad_campaigns_metrics_on_account_id_and_event_date"
-    t.index ["campaign_id", "event_date"], name: "index_ad_campaigns_metrics_on_campaign_id_and_event_date", unique: true
+    t.index ["account_id", "event_date"], name: "index_ad_metrics_on_account_id_and_event_date"
+    t.index ["ad_id", "event_date"], name: "index_ad_metrics_on_ad_id_and_event_date", unique: true
   end
 
   create_table "ad_sets", id: false, force: :cascade do |t|
@@ -91,7 +75,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_22_064126) do
     t.index ["id"], name: "index_ad_sets_on_id", unique: true
   end
 
-  create_table "ad_sets_metrics", force: :cascade do |t|
+  create_table "adaccount_metrics", force: :cascade do |t|
     t.integer "clicks"
     t.float "ctr"
     t.integer "link_clicks"
@@ -102,12 +86,29 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_22_064126) do
     t.integer "likes"
     t.float "spend"
     t.datetime "event_date", null: false
-    t.string "adset_id", null: false
     t.string "account_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["account_id", "event_date"], name: "index_ad_sets_metrics_on_account_id_and_event_date"
-    t.index ["adset_id", "event_date"], name: "index_ad_sets_metrics_on_adset_id_and_event_date", unique: true
+    t.index ["account_id", "event_date"], name: "index_adaccount_metrics_on_account_id_and_event_date", unique: true
+  end
+
+  create_table "adcampaign_metrics", force: :cascade do |t|
+    t.integer "clicks"
+    t.float "ctr"
+    t.integer "link_clicks"
+    t.float "linl_clicks_ctr"
+    t.float "cost_per_link_clicks"
+    t.integer "comments"
+    t.integer "impressions"
+    t.integer "likes"
+    t.float "spend"
+    t.datetime "event_date", null: false
+    t.string "campaign_id", null: false
+    t.string "account_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id", "event_date"], name: "index_adcampaign_metrics_on_account_id_and_event_date"
+    t.index ["campaign_id", "event_date"], name: "index_adcampaign_metrics_on_campaign_id_and_event_date", unique: true
   end
 
   create_table "ads", id: false, force: :cascade do |t|
@@ -124,7 +125,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_22_064126) do
     t.index ["id"], name: "index_ads_on_id", unique: true
   end
 
-  create_table "ads_metrics", force: :cascade do |t|
+  create_table "adset_metrics", force: :cascade do |t|
     t.integer "clicks"
     t.float "ctr"
     t.integer "link_clicks"
@@ -135,12 +136,12 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_22_064126) do
     t.integer "likes"
     t.float "spend"
     t.datetime "event_date", null: false
-    t.string "ad_id", null: false
+    t.string "adset_id", null: false
     t.string "account_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["account_id", "event_date"], name: "index_ads_metrics_on_account_id_and_event_date"
-    t.index ["ad_id", "event_date"], name: "index_ads_metrics_on_ad_id_and_event_date", unique: true
+    t.index ["account_id", "event_date"], name: "index_adset_metrics_on_account_id_and_event_date"
+    t.index ["adset_id", "event_date"], name: "index_adset_metrics_on_adset_id_and_event_date", unique: true
   end
 
   create_table "users", force: :cascade do |t|
