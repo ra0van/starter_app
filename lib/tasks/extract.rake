@@ -26,9 +26,7 @@ namespace :Facebook do
       tr.transform_ad_insights(fb.get_ad_insights(account_id))
     end
 
-    ActiveRecord::Base.connection.instance_variable_set :@logger, Logger.new($stdout)
-    ActiveRecord::Base.logger = nil # Logger.new(STDOUT)
-
-    # tr.transform_ad_sets(data)
+    # ActiveRecord::Base.connection.instance_variable_set :@logger, Logger.new($stdout)
+    # ActiveRecord::Base.logger = Logger.new(STDOUT)
   end
 end

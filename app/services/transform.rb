@@ -7,6 +7,8 @@ class Transform
   def transform_ads(data)
     puts 'Transforming'
     ads = data.map do |record|
+      validate_required_fields(record, %w[id name adset_id account_id])
+
       {
         id: record['id'],
         name: record['name'],
@@ -20,6 +22,8 @@ class Transform
 
   def transform_ad_insights(data)
     ad_insights = data.map do |insight|
+      validate_required_fields(insight, %w[ad_id account_id])
+
       {
         clicks: insight['clicks'],
         ctr: insight['ctr'],
@@ -142,5 +146,14 @@ class Transform
     end
 
     AdaccountMetrics.upsert_all(account_insights, unique_by: %i[account_id event_date])
+  end
+
+  # Helper method to validate presence of required fields
+  def validate_required_fields(data, required_fields)
+    required_fields.each do |field|
+      if data[field].nil? || data[field].empty?
+        raise ArgumentError, "Missing or null value for required field: #{field}"
+      end
+    end
   end
 end

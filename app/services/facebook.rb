@@ -6,11 +6,8 @@ require 'json'
 # Class to interact with Facebook Ads API
 class Facebook
   @@access_token = 'EAAKDX99BZAz4BO75vjcOZCaPL2NheZCcQYXskZB1ag6hn7hD70DtvsQf99V2tXxXg8cJDMby8ZABxvK2QhfPAi0WA9drlZBEzZCZAdraKXTOjYI7tzyWzSn1Lt0PxXdUtADzaG7mfZAidIRZAdDIPS6fGpBxyEvZC99rxLfPBQDh3sc015VOENmCHAb7M0S39gzDu0x'
-  @@app_secret = '4fc406efd8e284f04bc46afa6fba6305'
 
   @@base_url = 'https://graph.facebook.com/'
-  @@user_account_id = '236247562146310'
-  @@account_id = 'act_202330961584003'
   @@version = 'v18.0'
 
   @@req_handler = HTTP::RequestHandler.new
