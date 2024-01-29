@@ -31,7 +31,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_22_064126) do
     t.string "name"
     t.string "objective"
     t.datetime "startdate"
-    t.integer "lifetime_budget"
+    t.bigint "lifetime_budget"
     t.string "budgeting_type"
     t.string "account_id", null: false
     t.datetime "created_at", null: false

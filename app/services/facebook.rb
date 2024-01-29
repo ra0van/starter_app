@@ -121,7 +121,7 @@ class Facebook
 
     params = {
       access_token: @@access_token,
-      limit: 10_000,
+      limit: 5_000,
       # date_preset: 'yesterday',
       time_range: get_timerange,
       fields: 'account_id,account_name,account_currency,reach,impressions,clicks,cpc,spend,inline_link_clicks,ctr,ad_id,cpm,cpp',
@@ -149,7 +149,7 @@ class Facebook
 
       data += parsed_response['data']
 
-      if parsed_response['paging'].key? 'next'
+      if parsed_response['paging'] && parsed_response['paging'].key?('next')
         after = parsed_response['paging']['cursors']['after']
         params['after'] = after
       else
