@@ -15,6 +15,16 @@ RSpec.describe Transform, type: :service do
       # Verify that the data is correctly transformed and upserted in the database
       expect(Ads.find_by(id: '1')).to_not be_nil
     end
+
+    context 'when the input data is missing required fields' do
+      it 'raises an error' do
+        data = [{ 'name' => 'Ad 1' }]
+
+        # Execute the transformation
+        transform = Transform.new
+        expect { transform.transform_ads(data) }.to raise_error(ArgumentError)
+      end
+    end
   end
 
   describe '#transform_ad_insights' do
@@ -30,23 +40,7 @@ RSpec.describe Transform, type: :service do
       # Verify that the data is correctly transformed and upserted in the database
       expect(AdMetrics.find_by(ad_id: '1')).to_not be_nil
     end
-  end
 
-  describe '#transform_ads' do
-    context 'when the input data is missing required fields' do
-      it 'raises an error' do
-        data = [{ 'name' => 'Ad 1' }]
-
-        # Execute the transformation
-        transform = Transform.new
-        expect { transform.transform_ads(data) }.to raise_error(ArgumentError)
-      end
-    end
-
-    # Add more negative cases for this method
-  end
-
-  describe '#transform_ad_insights' do
     context 'when the input data contains invalid values' do
       it 'raises an error' do
         data = [{ 'clicks' => 'invalid', 'ctr' => 0.05 }]
@@ -57,5 +51,4 @@ RSpec.describe Transform, type: :service do
       end
     end
   end
-  # Add similar tests for other methods
 end
