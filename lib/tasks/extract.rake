@@ -13,7 +13,7 @@ namespace :Facebook do
     user = Users.find_by(username: 'admin')
     fb = Facebook.new(user.fb_access_token)
     tr = Transform.new
-    tr.transform_ad_accounts(fb.get_ad_accounts(fb_user_id))
+    tr.transform_ad_accounts(fb.get_ad_accounts(user.fb_useraccount_id))
 
     accounts = AdAccounts.all
     accounts.map do |account|
