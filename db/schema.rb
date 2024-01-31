@@ -92,6 +92,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_22_064126) do
     t.index ["account_id", "event_date"], name: "index_adaccount_metrics_on_account_id_and_event_date", unique: true
   end
 
+
   create_table "adcampaign_metrics", force: :cascade do |t|
     t.integer "clicks"
     t.float "ctr"

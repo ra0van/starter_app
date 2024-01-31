@@ -12,6 +12,7 @@ class CreateAds < ActiveRecord::Migration[7.1]
 
       t.index :id, unique: true
       t.index [:account_id, :id]
+
     end
 
     create_table :ad_metrics do |t|
