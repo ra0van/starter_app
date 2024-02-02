@@ -5,10 +5,12 @@ class AdsQueryInterface
     clicks ctr link_clicks comments impressions likes spend
   ].freeze
 
-  HIERARCHY = { 'ad_accounts' => 0, 'ad_campaigns' => 1, 'ad_sets' => 2, 'ads' => 3
-  }.freeze
+  HIERARCHY = { 'ad_accounts' => 0, 'ad_campaigns' => 1, 'ad_sets' => 2, 'ads' => 3 }.freeze
 
-  JOIN_KEY = { 'ad_accounts' => 'id', 'ad_campaigns' => 'account_id', 'ad_sets' => 'campaign_id', 'ads' => 'adset_id', 'adaccount_metrics' => 'account_id', 'campaign_metrics' => 'campaign_id', 'adset_metrics' => 'adset_id', 'ad_metrics' => 'ad_id'
+  JOIN_KEY = {
+    'ad_accounts' => 'id', 'ad_campaigns' => 'account_id', 'ad_sets' => 'campaign_id', 'ads' => 'adset_id',
+    'adaccount_metrics' => 'account_id', 'campaign_metrics' => 'campaign_id',
+    'adset_metrics' => 'adset_id', 'ad_metrics' => 'ad_id'
   }.freeze
 
   # Maps entities to their corresponding metrics tables
@@ -29,19 +31,8 @@ class AdsQueryInterface
   end
 
   def separate_fields(fields)
-    metrics = []
-    dimensions = []
-    lowest_dim_index = -1
-    fields.each do |field|
-      if METRICS_COLUMNS.include? field
-        metrics.push(field)
-      else
-        dimensions.push(field)
-        node, = field.split('.')
-        puts node.inspect
-        lowest_dim_index = [HIERARCHY[node], lowest_dim_index].max
-      end
-    end
+    metrics, dimensions = fields.partition { |field| METRICS_COLUMNS.include?(field) }
+    lowest_dim_index = dimensions.map { |field| HIERARCHY[field.split('.').first] }.max || -1
     [metrics, dimensions, HIERARCHY.key(lowest_dim_index)]
   end
 
@@ -51,31 +42,28 @@ class AdsQueryInterface
   end
 
   def construct_sql_query(metrics, dimensions, level)
-    nodes = dimensions.map do |item|
-      entity, = item.split('.')
-      entity
-    end
-    # Step 2: Sort by hierarchy value in descending order and remove duplicates
-    nodes = nodes.uniq.sort_by { |item| - HIERARCHY[item] }
+    dimension_entities = dimensions.map { |dim| dim.split('.').first }.uniq
+    sorted_nodes = dimension_entities.sort_by { |entity| -HIERARCHY[entity] }
 
-    table = metrics.empty? ? nodes.shift : METRICS_ASSOCIATION[level]
+    table = metrics.empty? ? sorted_nodes.shift : METRICS_ASSOCIATION[level]
+    join_query = construct_join_query(sorted_nodes, table)
+    select_query = construct_select_query(metrics, dimensions)
 
-    # TODO : If Join is not incremental, then fill the blanks before joining
-    join_query = ["FROM #{table}"]
+    "#{select_query} FROM #{table} #{join_query}"
+  end
+
+  def construct_join_query(nodes, table)
+    join_query = []
     prev = table
     nodes.each do |node|
-      join_query.push("INNER JOIN #{node} on #{prev}.#{JOIN_KEY[prev]} = #{node}.id")
+      prev_key = JOIN_KEY[node] || 'id'
+      join_query.push("INNER JOIN #{node} ON #{prev}.#{prev_key} = #{node}.id")
       prev = node
     end
+    join_query.join(' ')
+  end
 
-    select_query = ['SELECT']
-    metrics.each do |metric|
-      select_query.push("#{metric},")
-    end
-    dimensions.each do |dimension|
-      select_query.push("#{dimension},")
-    end
-
-    select_query.join(' ').chop + ' ' + join_query.join(' ')
+  def construct_select_query(metrics, dimensions)
+    'SELECT ' + (metrics + dimensions).join(', ')
   end
 end
