@@ -1,100 +1,70 @@
-class FacebookAdsQueryParser
-  METRICS_COLUMNS = [
-    'clicks', 'ctr', 'link_clicks', 'comments', 'impressions', 'likes', 'spend'
-  ]
+# frozen_string_literal: true
 
-  HIERARCHY_MAPPING = {
-    'ad_accounts' => { 'children' => ['ad_campaigns'], 'metrics_table' => 'adaccount_metrics' },
-    'ad_campaigns' => { 'children' => ['ad_sets'], 'metrics_table' => 'adcampaign_metrics' },
-    'ad_sets' => { 'children' => ['ads'], 'metrics_table' => 'adset_metrics' },
-    'ads' => { 'metrics_table' => 'ad_metrics' }
+class AdsQueryInterface
+  METRICS_COLUMNS = %w[
+    clicks ctr link_clicks comments impressions likes spend
+  ].freeze
+
+  HIERARCHY = { 'ad_accounts' => 0, 'ad_campaigns' => 1, 'ad_sets' => 2, 'ads' => 3
   }.freeze
 
-  def self.parse_and_execute(query)
-    parsed_query = parse(query)
-    puts parsed_query
-    sql_query = build_sql_query(parsed_query)
-    # result = execute_sql_query(sql_query)
-    # process_result(result)
+  # Maps entities to their corresponding metrics tables
+  METRICS_ASSOCIATION = {
+    'ads' => 'ad_metrics',
+    'ad_sets' => 'adset_metrics',
+    'ad_campaigns' => 'adcampaign_metrics',
+    'ad_accounts' => 'adaccount_metrics'
+  }.freeze
+
+  def generate_query(fields, filters)
+    metrics, dimensions, levelarate_fields(fields)
+    metrics = prefix_metrics(metrics, level)
+    join(metrics, dimensions, level)
+    # Join LD & LM
+    # Join Other Dimensions
+    # Add Date filter
+    # Add Account filter
   end
 
-  def self.parse(query)
-    select_clause, where_clause = query.split('WHERE').map(&:strip)
-    fields = select_clause.gsub('SELECT', '').split(',').map(&:strip)
-    conditions = where_clause
-
-    level = determine_query_level(fields +  [conditions])
-    puts "Level: #{level}" 
-    tables_involved, updated_fields= determine_metrics_tables(fields)
-
-    { level: level, fields: updated_fields.join(', '), conditions: conditions, metrics_tables: tables_involved}
-  end
-
-
-  def self.determine_query_level(parts)
-    puts "Determine Query"
-    puts parts.inspect
-
-    puts "Flatten"
-    all_entities = parts.flat_map { |part| 
-      puts part
-      part.scan(/(\b\w+)\./).flatten 
-    }.uniq
-    puts "All Enti"
-    puts all_entities
-    highest_level = all_entities.max_by do |entity|
-      puts HIERARCHY_MAPPING.keys.index(entity) || 999, entity
-      HIERARCHY_MAPPING.keys.index(entity) || 999
-    end
-    puts "===highest=="
-    puts highest_level
-    HIERARCHY_MAPPING.keys.include?(highest_level) ? highest_level : 'ad_accounts'
-  end
-
-
-  def self.determine_metrics_tables(fields)
-    puts "====Finding metrics", fields
-    metrics_fields = []
-    tables_involved = []
-
+  def separate_fields(fields)
+    metrics = [], dimensions = []
+    lowest_dim_index = 999
     fields.each do |field|
-      entity, field_name = field.split('.')
-      puts "--" + field_name
-
-      if METRICS_COLUMNS.include?(field_name)
-        # Assuming each entity has a corresponding metrics table following a naming convention
-        metrics_table = "#{entity}_metrics"
-        metrics_fields << "#{metrics_table}.#{field_name}"
-        tables_involved << metrics_table
+      if METRICS_COLUMNS.include? field
+        metrics << field
       else
-        # For non-metrics fields, keep them as is
-        metrics_fields << field
+        dimensions << field
+        node, = field.split('.')
+        lowest_dim_index = HIERARCHY[node] > lowest_dim_index ? HIERARCHY[node] : lowest_dim_index
       end
     end
 
-    [tables_involved.uniq, metrics_fields.uniq]
-  end
-  def self.build_sql_query(parsed_query)
-    fields = parsed_query[:fields]
-    conditions = parsed_query[:conditions]
-    level = parsed_query[:level]
-    metrics_tables = parsed_query[:metrics_tables]
-
-    joins = metrics_tables.map do |metrics_table|
-      "LEFT JOIN #{metrics_table} ON #{level}.id = #{metrics_table}.#{level.singularize}_id"
-    end.join(' ')
-
-    "SELECT #{fields} FROM #{level} #{joins} WHERE #{conditions}"
+    [metrics, dimensions, HIERARCHY.key(lowest_dim_index)]
   end
 
-  def self.execute_sql_query(sql_query)
-    puts "Executing SQL query: #{sql_query}"
-    [{'name' => 'Mock Campaign', 'lifetime_budget' => 1000, 'clicks' => 150}] # Mock result
+  def prefix_metrics(fields, level)
+    prefix = METRICS_ASSOCIATION[level]
+    fields.map { |field| "#{prefix}.#{field}" }
   end
 
-  def self.process_result(result)
-    puts "Processed result: #{result.inspect}"
-    result
+  def join(metrics, dimensions, level)
+    nodes = dimensions.map do |item|
+      entity, = item.split('.')
+      entity
+    end
+    # Step 2: Sort by hierarchy value in descending order and remove duplicates
+    nodes = nodes.uniq.sort_by { |item| - HIERARCHY[item] }
+    
+    if !metrics.empty?
+      
+
+  end
+
+  def get_lowest_node(tables, hierarchy)
+    level = tables.max_by do |table|
+      hierarchy[table] || 999
+    end
+    puts level
   end
 end
 
