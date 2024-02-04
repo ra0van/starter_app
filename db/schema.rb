@@ -10,9 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_01_22_064126) do
+ActiveRecord::Schema[7.1].define(version: 2024_02_04_174807) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "account_dimensions", id: false, force: :cascade do |t|
+    t.string "id", null: false
+    t.string "name"
+    t.string "currency"
+    t.datetime "stop_date"
+    t.bigint "users_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["id"], name: "index_account_dimensions_on_id", unique: true
+    t.index ["users_id"], name: "index_account_dimensions_on_users_id"
+  end
 
   create_table "ad_accounts", id: false, force: :cascade do |t|
     t.string "id", null: false
@@ -38,6 +50,38 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_22_064126) do
     t.datetime "updated_at", null: false
     t.index ["account_id", "id"], name: "index_ad_campaigns_on_account_id_and_id", unique: true
     t.index ["id"], name: "index_ad_campaigns_on_id", unique: true
+  end
+
+  create_table "ad_dimensions", id: false, force: :cascade do |t|
+    t.string "id", null: false
+    t.string "name"
+    t.string "type"
+    t.string "format"
+    t.datetime "start_date"
+    t.string "adset_id", null: false
+    t.string "adset_name"
+    t.string "adset_goal"
+    t.datetime "adset_date"
+    t.integer "adset_daily_budget"
+    t.integer "adset_lifetime_budget"
+    t.string "adset_billing_event"
+    t.string "campaign_id", null: false
+    t.string "campaign_name"
+    t.string "campaing_objective"
+    t.datetime "campaign_startdate"
+    t.bigint "campaign_lifetime_budget"
+    t.string "campaign_budgeting_type"
+    t.string "account_id", null: false
+    t.string "account_name"
+    t.string "account_currency"
+    t.string "account_stop_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id", "adset_name"], name: "index_ad_dimensions_on_account_id_and_adset_name"
+    t.index ["account_id", "campaign_name"], name: "index_ad_dimensions_on_account_id_and_campaign_name"
+    t.index ["account_id", "id"], name: "index_ad_dimensions_on_account_id_and_id", unique: true
+    t.index ["account_id", "name"], name: "index_ad_dimensions_on_account_id_and_name"
+    t.index ["id"], name: "index_ad_dimensions_on_id", unique: true
   end
 
   create_table "ad_metrics", force: :cascade do |t|
@@ -92,7 +136,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_22_064126) do
     t.index ["account_id", "event_date"], name: "index_adaccount_metrics_on_account_id_and_event_date", unique: true
   end
 
-
   create_table "adcampaign_metrics", force: :cascade do |t|
     t.integer "clicks"
     t.float "ctr"
@@ -126,6 +169,31 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_22_064126) do
     t.index ["id"], name: "index_ads_on_id", unique: true
   end
 
+  create_table "adset_dimensions", id: false, force: :cascade do |t|
+    t.string "id", null: false
+    t.string "name"
+    t.string "goal"
+    t.datetime "date"
+    t.integer "daily_budget"
+    t.integer "lifetime_budget"
+    t.string "billing_event"
+    t.string "campaign_id", null: false
+    t.string "campaign_name"
+    t.string "campaing_objective"
+    t.datetime "campaign_startdate"
+    t.bigint "campaign_lifetime_budget"
+    t.string "campaign_budgeting_type"
+    t.string "account_id", null: false
+    t.string "account_name"
+    t.string "account_currency"
+    t.string "account_stop_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id", "id"], name: "index_adset_dimensions_on_account_id_and_id", unique: true
+    t.index ["account_id", "name"], name: "index_adset_dimensions_on_account_id_and_name"
+    t.index ["id"], name: "index_adset_dimensions_on_id", unique: true
+  end
+
   create_table "adset_metrics", force: :cascade do |t|
     t.integer "clicks"
     t.float "ctr"
@@ -143,6 +211,24 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_22_064126) do
     t.datetime "updated_at", null: false
     t.index ["account_id", "event_date"], name: "index_adset_metrics_on_account_id_and_event_date"
     t.index ["adset_id", "event_date"], name: "index_adset_metrics_on_adset_id_and_event_date", unique: true
+  end
+
+  create_table "campaign_dimensions", id: false, force: :cascade do |t|
+    t.string "id", null: false
+    t.string "name"
+    t.string "objective"
+    t.datetime "startdate"
+    t.bigint "lifetime_budget"
+    t.string "budgeting_type"
+    t.string "account_id", null: false
+    t.string "account_name"
+    t.string "account_currency"
+    t.string "account_stop_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id", "id"], name: "index_campaign_dimensions_on_account_id_and_id", unique: true
+    t.index ["account_id", "name"], name: "index_campaign_dimensions_on_account_id_and_name"
+    t.index ["id"], name: "index_campaign_dimensions_on_id", unique: true
   end
 
   create_table "users", force: :cascade do |t|
