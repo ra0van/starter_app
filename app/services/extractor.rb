@@ -3,7 +3,7 @@
 require 'date'
 
 # Class to transform Facebook API data to ActiveRecord
-class Transform
+class Extractor
   REQUIRED_FIELDS = {
     ads: %w[id name adset_id account_id],
     ad_insights: %w[ad_id account_id date_stop],
@@ -15,7 +15,7 @@ class Transform
     adaccount_insights: %w[account_id date_stop]
   }.freeze
 
-  def transform_ads(data)
+  def extract_and_save_ads(data)
     puts 'Transforming Ads'
     ads = data.map do |record|
       validate_required_fields(record, REQUIRED_FIELDS[:ads])
@@ -31,7 +31,7 @@ class Transform
     Ads.upsert_all(ads, unique_by: :id)
   end
 
-  def transform_ad_insights(data)
+  def extract_and_save_ad_insights(data)
     puts 'Transforming Ad Insights'
     ad_insights = data.map do |insight|
       validate_required_fields(insight, REQUIRED_FIELDS[:ad_insights])
@@ -53,7 +53,7 @@ class Transform
     # metrics.each { |x| puts x.inspect }
   end
 
-  def transform_ad_sets(data)
+  def extract_and_save_ad_sets(data)
     puts 'Transforming Ad Sets'
     adsets = data.map do |set|
       validate_required_fields(set, REQUIRED_FIELDS[:ad_sets])
@@ -74,7 +74,7 @@ class Transform
     AdSets.upsert_all(adsets, unique_by: :id)
   end
 
-  def transform_adset_insights(data)
+  def extract_and_save_adset_insights(data)
     puts 'Transforming Adset Insights'
     adset_insights = data.map do |insight|
       validate_required_fields(insight, REQUIRED_FIELDS[:adset_insights])
@@ -95,7 +95,7 @@ class Transform
     AdsetMetrics.upsert_all(adset_insights, unique_by: %i[adset_id event_date])
   end
 
-  def transform_ad_campaigns(data)
+  def extract_and_save_ad_campaigns(data)
     puts 'Transforming Ad Campaigns'
     ad_campaigns = data.map do |campaign|
       validate_required_fields(campaign, REQUIRED_FIELDS[:ad_campaigns])
@@ -125,7 +125,7 @@ class Transform
     AdCampaigns.upsert_all(ad_campaigns, unique_by: :id)
   end
 
-  def transform_adcampaign_insights(data)
+  def extract_and_save_adcampaign_insights(data)
     puts 'Transforming Adcampaign Insights'
     campaign_insights = data.map do |insight|
       validate_required_fields(insight, REQUIRED_FIELDS[:adcampaign_insights])
@@ -146,7 +146,7 @@ class Transform
     AdcampaignMetrics.upsert_all(campaign_insights, unique_by: %i[campaign_id event_date])
   end
 
-  def transform_ad_accounts(data)
+  def extract_and_save_ad_accounts(data)
     puts 'Transforming Ad Accounts'
     ad_accounts = data.map do |account|
       validate_required_fields(account, REQUIRED_FIELDS[:ad_accounts])
@@ -161,7 +161,7 @@ class Transform
     AdAccounts.upsert_all(ad_accounts, unique_by: :id)
   end
 
-  def transform_adaccount_insighs(data)
+  def extract_and_save_adaccount_insights(data)
     puts 'Transforming Adaccount Insights'
     account_insights = data.map do |insight|
       validate_required_fields(insight, REQUIRED_FIELDS[:adaccount_insights])
