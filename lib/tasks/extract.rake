@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "#{Rails.root}/app/services/facebook.rb"
-require "#{Rails.root}/app/services/transform.rb"
+require "#{Rails.root}/app/services/extractor.rb"
 
 namespace :Facebook do
   desc 'Fetch Data from Facebook'
@@ -12,21 +12,21 @@ namespace :Facebook do
 
     user = Users.find_by(username: 'admin')
     fb = Facebook.new(user.fb_access_token)
-    tr = Transform.new
-    tr.transform_ad_accounts(fb.get_ad_accounts(user.fb_useraccount_id))
+    tr = Extractor.new
+    tr.extract_and_save_ad_accounts(fb.get_ad_accounts(user.fb_useraccount_id))
 
     accounts = AdAccounts.all
     accounts.map do |account|
       account_id = account[:id]
       puts account_id
-      tr.transform_ad_campaigns(fb.get_ad_campaigns(account_id))
-      tr.transform_ad_sets(fb.get_ad_sets(account_id))
-      tr.transform_ads(fb.get_ads(account_id))
+      tr.extract_and_save_ad_campaigns(fb.get_ad_campaigns(account_id))
+      tr.extract_and_save_ad_sets(fb.get_ad_sets(account_id))
+      tr.extract_and_save_ads(fb.get_ads(account_id))
 
-      tr.transform_adaccount_insighs(fb.get_account_insights(account_id))
-      tr.transform_adcampaign_insights(fb.get_campaign_insights(account_id))
-      tr.transform_adset_insights(fb.get_adset_insights(account_id))
-      tr.transform_ad_insights(fb.get_ad_insights(account_id))
+      tr.extract_and_save_adaccount_insights(fb.get_account_insights(account_id))
+      tr.extract_and_save_adcampaign_insights(fb.get_campaign_insights(account_id))
+      tr.extract_and_save_adset_insights(fb.get_adset_insights(account_id))
+      tr.extract_and_save_ad_insights(fb.get_ad_insights(account_id))
     end
 
     # ActiveRecord::Base.connection.instance_variable_set :@logger, Logger.new($stdout)
