@@ -67,7 +67,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_04_174807) do
     t.string "adset_billing_event"
     t.string "campaign_id", null: false
     t.string "campaign_name"
-    t.string "campaing_objective"
+    t.string "campaign_objective"
     t.datetime "campaign_startdate"
     t.bigint "campaign_lifetime_budget"
     t.string "campaign_budgeting_type"
@@ -179,7 +179,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_04_174807) do
     t.string "billing_event"
     t.string "campaign_id", null: false
     t.string "campaign_name"
-    t.string "campaing_objective"
+    t.string "campaign_objective"
     t.datetime "campaign_startdate"
     t.bigint "campaign_lifetime_budget"
     t.string "campaign_budgeting_type"

@@ -5,7 +5,7 @@ class AdsQueryInterface
     clicks ctr link_clicks comments impressions likes spend
   ].freeze
 
-  HIERARCHY = { 'ad_accounts' => 0, 'ad_campaigns' => 1, 'ad_sets' => 2, 'ads' => 3 }.freeze
+  HIERARCHY = { 'account' => 0, 'campaign' => 1, 'adset' => 2, 'ad' => 3 }.freeze
 
   JOIN_KEY = {
     'ad_accounts' => 'id', 'ad_campaigns' => 'account_id', 'ad_sets' => 'campaign_id', 'ads' => 'adset_id',
@@ -15,10 +15,10 @@ class AdsQueryInterface
 
   # Maps entities to their corresponding metrics tables
   METRICS_ASSOCIATION = {
-    'ads' => 'ad_metrics',
-    'ad_sets' => 'adset_metrics',
-    'ad_campaigns' => 'adcampaign_metrics',
-    'ad_accounts' => 'adaccount_metrics'
+    'ad' => 'ad_metrics',
+    'adset' => 'adset_metrics',
+    'campaign' => 'adcampaign_metrics',
+    'account' => 'adaccount_metrics'
   }.freeze
 
   def generate_query(fields, filters)

@@ -146,14 +146,15 @@ class Extractor
     AdcampaignMetrics.upsert_all(campaign_insights, unique_by: %i[campaign_id event_date])
   end
 
-  def extract_and_save_ad_accounts(data)
+  def extract_and_save_ad_accounts(data, user_id)
     puts 'Transforming Ad Accounts'
     ad_accounts = data.map do |account|
       validate_required_fields(account, REQUIRED_FIELDS[:ad_accounts])
       {
-        id: account['id'],
+        id: account['account_id'],
         name: account['name'],
-        currency: account['currency']
+        currency: account['currency'],
+        users_id: user_id
       }
     end
 

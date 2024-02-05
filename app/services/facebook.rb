@@ -16,7 +16,7 @@ class Facebook
     ads: %w[name id created_time campaign_id account_id adset_id],
     adsets: %w[name id created_time campaign_id account_id],
     campaigns: %w[objective name id buying_type daily_budget lifetime_budget start_time account_id adsets.fields(daily_budget lifetime_budget) budgeting_type],
-    adaccounts: %w[name id currency],
+    adaccounts: %w[name account_id currency],
     account_insights: %w[account_id reach impressions clicks cpc spend inline_link_clicks ctr cost_per_unique_action_type cpm cpp],
     campaign_insights: %w[account_id account_name campaign_id campaign_name account_currency reach impressions clicks cpc spend inline_link_clicks],
     adset_insights: %w[account_id account_currency reach impressions clicks cpc spend inline_link_clicks adset_id],

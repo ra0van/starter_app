@@ -10,7 +10,7 @@ class CreateAdsetDimensions < ActiveRecord::Migration[7.1]
       t.string          :billing_event
       t.string          :campaign_id, null: false
       t.string          :campaign_name
-      t.string          :campaing_objective
+      t.string          :campaign_objective
       t.datetime        :campaign_startdate
       t.bigint          :campaign_lifetime_budget
       t.string          :campaign_budgeting_type
