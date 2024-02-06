@@ -35,16 +35,19 @@ class Extractor
     puts 'Transforming Ad Insights'
     ad_insights = data.map do |insight|
       validate_required_fields(insight, REQUIRED_FIELDS[:ad_insights])
-
+      link_clicks = insight['inline_link_clicks'].to_i
       {
+        account_id: insight['account_id'],
+        ad_id: insight['ad_id'],
         clicks: insight['clicks'],
-        ctr: insight['ctr'],
-        link_clicks: insight['inline_link_clicks'],
+        link_clicks: link_clicks ,
         event_date: Date.strptime(insight['date_stop'], '%Y-%m-%d'),
         comments: insight['comments'],
         spend: insight['spend'],
-        ad_id: insight['ad_id'],
-        account_id: insight['account_id']
+        reach: insight['reach'],
+        impressions: insight['impressions'],
+        link_click_impressions: (link_clicks * 100) / insight['inline_link_click_ctr'].to_f,
+        link_click_cost: insight['cost_per_inline_link_click'].to_f * link_clicks
       }
     end
     puts 'Saving Ad Insights Records'
@@ -78,16 +81,20 @@ class Extractor
     puts 'Transforming Adset Insights'
     adset_insights = data.map do |insight|
       validate_required_fields(insight, REQUIRED_FIELDS[:adset_insights])
+      link_clicks = insight['inline_link_clicks'].to_i
 
       {
+        adset_id: insight['adset_id'],
+        account_id: insight['account_id'],
         clicks: insight['clicks'],
-        ctr: insight['ctr'],
-        link_clicks: insight['inline_link_clicks'],
+        link_clicks: link_clicks,
         event_date: Date.strptime(insight['date_stop'], '%Y-%m-%d'),
         comments: insight['comments'],
         spend: insight['spend'],
-        adset_id: insight['adset_id'],
-        account_id: insight['account_id']
+        reach: insight['reach'],
+        impressions: insight['impressions'],
+        link_click_impressions: (link_clicks * 100) / insight['inline_link_click_ctr'].to_f,
+        link_click_cost: insight['cost_per_inline_link_click'].to_f * link_clicks
       }
     end
 
@@ -129,16 +136,20 @@ class Extractor
     puts 'Transforming Adcampaign Insights'
     campaign_insights = data.map do |insight|
       validate_required_fields(insight, REQUIRED_FIELDS[:adcampaign_insights])
+      link_clicks = insight['inline_link_clicks'].to_i
 
       {
+        campaign_id: insight['campaign_id'],
+        account_id: insight['account_id'],
         clicks: insight['clicks'],
-        ctr: insight['ctr'],
-        link_clicks: insight['inline_link_clicks'],
+        link_clicks: link_clicks,
         event_date: Date.strptime(insight['date_stop'], '%Y-%m-%d'),
         comments: insight['comments'],
         spend: insight['spend'],
-        campaign_id: insight['campaign_id'],
-        account_id: insight['account_id']
+        reach: insight['reach'],
+        impressions: insight['impressions'],
+        link_click_impressions: (link_clicks * 100) / insight['inline_link_click_ctr'].to_f,
+        link_click_cost: insight['cost_per_inline_link_click'].to_f * link_clicks
       }
     end
 
@@ -166,15 +177,19 @@ class Extractor
     puts 'Transforming Adaccount Insights'
     account_insights = data.map do |insight|
       validate_required_fields(insight, REQUIRED_FIELDS[:adaccount_insights])
+      link_clicks = insight['inline_link_clicks'].to_i
 
       {
+        account_id: insight['account_id'],
         clicks: insight['clicks'],
-        ctr: insight['ctr'],
-        link_clicks: insight['inline_link_clicks'],
+        link_clicks: link_clicks,
         event_date: Date.strptime(insight['date_stop'], '%Y-%m-%d'),
         comments: insight['comments'],
         spend: insight['spend'],
-        account_id: insight['account_id']
+        reach: insight['reach'],
+        impressions: insight['impressions'],
+        link_click_impressions: (link_clicks * 100) / insight['inline_link_click_ctr'].to_f,
+        link_click_cost: insight['cost_per_inline_link_click'].to_f * link_clicks
       }
     end
 

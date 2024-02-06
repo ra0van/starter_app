@@ -17,10 +17,10 @@ class Facebook
     adsets: %w[name id created_time campaign_id account_id],
     campaigns: %w[objective name id buying_type daily_budget lifetime_budget start_time account_id adsets.fields(daily_budget lifetime_budget) budgeting_type],
     adaccounts: %w[name account_id currency],
-    account_insights: %w[account_id reach impressions clicks cpc spend inline_link_clicks ctr cost_per_unique_action_type cpm cpp],
-    campaign_insights: %w[account_id account_name campaign_id campaign_name account_currency reach impressions clicks cpc spend inline_link_clicks],
-    adset_insights: %w[account_id account_currency reach impressions clicks cpc spend inline_link_clicks adset_id],
-    ad_insights: %w[account_id account_name account_currency reach impressions clicks cpc spend inline_link_clicks ctr ad_id cpm cpp]
+    account_insights: %w[account_id reach impressions clicks spend inline_link_clicks cost_per_inline_link_click inline_link_click_ctr],
+    campaign_insights: %w[account_id campaign_id reach impressions clicks spend inline_link_clicks cost_per_inline_link_click inline_link_click_ctr],
+    adset_insights: %w[account_id adset_id reach impressions clicks spend inline_link_clicks cost_per_inline_link_click inline_link_click_ctr],
+    ad_insights: %w[account_id ad_id reach impressions clicks spend inline_link_clicks cost_per_inline_link_click inline_link_click_ctr]
   }.freeze
 
   def get_ads(account_id)

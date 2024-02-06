@@ -86,14 +86,14 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_04_174807) do
 
   create_table "ad_metrics", force: :cascade do |t|
     t.integer "clicks"
-    t.float "ctr"
     t.integer "link_clicks"
-    t.float "linl_clicks_ctr"
-    t.float "cost_per_link_clicks"
     t.integer "comments"
     t.integer "impressions"
     t.integer "likes"
     t.float "spend"
+    t.integer "reach"
+    t.integer "link_click_impressions"
+    t.float "link_click_cost"
     t.datetime "event_date", null: false
     t.string "ad_id", null: false
     t.string "account_id", null: false
@@ -121,14 +121,14 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_04_174807) do
 
   create_table "adaccount_metrics", force: :cascade do |t|
     t.integer "clicks"
-    t.float "ctr"
     t.integer "link_clicks"
-    t.float "linl_clicks_ctr"
-    t.float "cost_per_link_clicks"
     t.integer "comments"
     t.integer "impressions"
     t.integer "likes"
+    t.integer "reach"
     t.float "spend"
+    t.integer "link_click_impressions"
+    t.float "link_click_cost"
     t.datetime "event_date", null: false
     t.string "account_id", null: false
     t.datetime "created_at", null: false
@@ -138,14 +138,14 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_04_174807) do
 
   create_table "adcampaign_metrics", force: :cascade do |t|
     t.integer "clicks"
-    t.float "ctr"
     t.integer "link_clicks"
-    t.float "linl_clicks_ctr"
-    t.float "cost_per_link_clicks"
     t.integer "comments"
     t.integer "impressions"
     t.integer "likes"
     t.float "spend"
+    t.integer "reach"
+    t.integer "link_click_impressions"
+    t.float "link_click_cost"
     t.datetime "event_date", null: false
     t.string "campaign_id", null: false
     t.string "account_id", null: false
@@ -196,14 +196,14 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_04_174807) do
 
   create_table "adset_metrics", force: :cascade do |t|
     t.integer "clicks"
-    t.float "ctr"
     t.integer "link_clicks"
-    t.float "linl_clicks_ctr"
-    t.float "cost_per_link_clicks"
     t.integer "comments"
     t.integer "impressions"
     t.integer "likes"
     t.float "spend"
+    t.integer "reach"
+    t.integer "link_click_impressions"
+    t.float "link_click_cost"
     t.datetime "event_date", null: false
     t.string "adset_id", null: false
     t.string "account_id", null: false

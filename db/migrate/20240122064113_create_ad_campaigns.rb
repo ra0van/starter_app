@@ -16,14 +16,14 @@ class CreateAdCampaigns < ActiveRecord::Migration[7.1]
 
     create_table :adcampaign_metrics do |t|
       t.integer     :clicks
-      t.float       :ctr
       t.integer     :link_clicks
-      t.float       :linl_clicks_ctr
-      t.float       :cost_per_link_clicks
       t.integer     :comments
       t.integer     :impressions
       t.integer     :likes
       t.float       :spend
+      t.integer     :reach
+      t.integer     :link_click_impressions
+      t.float       :link_click_cost
       t.datetime    :event_date, null: false
       t.string      :campaign_id, null: false
       t.string      :account_id, null: false

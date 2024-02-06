@@ -8,7 +8,7 @@ namespace :Facebook do
   task extract: :environment do
     token = 'EAAKDX99BZAz4BO75vjcOZCaPL2NheZCcQYXskZB1ag6hn7hD70DtvsQf99V2tXxXg8cJDMby8ZABxvK2QhfPAi0WA9drlZBEzZCZAdraKXTOjYI7tzyWzSn1Lt0PxXdUtADzaG7mfZAidIRZAdDIPS6fGpBxyEvZC99rxLfPBQDh3sc015VOENmCHAb7M0S39gzDu0x'
     fb_user_id = '236247562146310'
-    Users.create({fb_useraccount_id: fb_user_id, fb_access_token: token, username: 'admin'})
+    # Users.({fb_useraccount_id: fb_user_id, fb_access_token: token, username: 'admin'})
 
     user = Users.find_by(username: 'admin')
     fb = Facebook.new(user.fb_access_token)
