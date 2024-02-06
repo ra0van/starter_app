@@ -5,9 +5,10 @@ class AdsQueryInterface
     clicks ctr link_clicks comments impressions likes spend links_ctr cplc
   ].freeze
 
-  DERIEVED_METRICS = %w[
+  DERIVED_METRICS = %w[
     ctr link_ctr cplc
   ].freeze
+
   HIERARCHY = { 'account' => 0, 'campaign' => 1, 'adset' => 2, 'ad' => 3 }.freeze
 
   JOIN_KEY = {
@@ -15,7 +16,6 @@ class AdsQueryInterface
     'adset_metrics' => 'adset_id', 'ad_metrics' => 'ad_id'
   }.freeze
 
-  # Maps entities to their corresponding metrics tables
   METRICS_ASSOCIATION = {
     'ad' => 'ad_metrics',
     'adset' => 'adset_metrics',
@@ -25,13 +25,14 @@ class AdsQueryInterface
 
   def generate_query(fields, filters)
     metrics, dimensions, level = separate_fields(fields)
-    puts level
-    puts "dimensions___ #{dimensions.inspect}"
-    puts "metrics ___ #{metrics.inspect}"
-    query = construct_sql_query(metrics, dimensions, filters, level)
-    # Add Date filter
-    # Add Account filter
+    transformed_metrics = transform_metrics(metrics, level)
+    transformed_dimensions = transform_dimensions(dimensions, level)
+
+    query = construct_sql_query(transformed_metrics, transformed_dimensions, filters, level)
+    execute_and_print_results(query)
   end
+
+  private
 
   def separate_fields(fields)
     metrics, dimensions = fields.partition { |field| METRICS_COLUMNS.include?(field) }
@@ -39,72 +40,70 @@ class AdsQueryInterface
     [metrics, dimensions, HIERARCHY.key(lowest_dim_index)]
   end
 
-  def transform_metrics(fields, level)
+  def transform_metrics(metrics, level)
     prefix = METRICS_ASSOCIATION[level]
-    fields.map do |field|
-      if DERIEVED_METRICS.include?(field)
-        case field
-        when 'ctr'
-          "SUM (#{prefix}.CLICKS) as clicks, SUM(#{prefix}.IMPRESSIONS) AS impressions"
-        when 'links_ctr'
-          "SUM (#{prefix}.LINK_CLICKS) as link_clicks, SUM(#{prefix}.LINK_CLICK_IMPRESSION)  AS link_click_impression"
-        when 'cplc'
-          "SUM (#{prefix}.LINK_CLICK_COST) as link_click_cost, SUM(#{prefix}.LINK_CLICKS)  AS link_clicks"
-        end
+    metrics.map do |metric|
+      case metric
+      when 'ctr', 'links_ctr', 'cplc'
+        transform_derived_metrics(metric, prefix)
       else
-        "SUM (#{prefix}.#{field}) as #{field}"
+        "SUM(#{prefix}.#{metric}) AS #{metric}"
       end
     end
   end
 
-  def transform_dimensions(fields, level)
-    fields.map do |field|
-      flevel, column = field.split('.')
-      if flevel != level
-        field.sub('.', '_')
+  def transform_derived_metrics(metric, prefix)
+    case metric
+    when 'ctr'
+      "SUM(#{prefix}.clicks) AS clicks, SUM(#{prefix}.impressions) AS impressions"
+    when 'links_ctr'
+      "SUM(#{prefix}.link_clicks) AS link_clicks, SUM(#{prefix}.link_click_impression) AS link_click_impression"
+    when 'cplc'
+      "SUM(#{prefix}.link_click_cost) AS link_click_cost, SUM(#{prefix}.link_clicks) AS link_clicks"
+    end
+  end
+
+  def transform_dimensions(dimensions, level)
+    prefix = "#{level}_dimensions."
+    dimensions.map do |dimension|
+      flevel, column = dimension.split('.')
+      flevel != level ? "#{prefix}#{dimension.sub('.', '_')}" : "#{prefix}#{column}"
+    end
+  end
+
+  def construct_sql_query(metrics, dimensions, filters, level)
+    select_query = "SELECT #{(metrics + dimensions).join(', ')}"
+    from_query = "FROM #{METRICS_ASSOCIATION[level]}"
+    join_query = "JOIN #{level}_dimensions ON #{METRICS_ASSOCIATION[level]}.#{JOIN_KEY[METRICS_ASSOCIATION[level]]} = #{level}_dimensions.id"
+    where_query = construct_where_query(filters, level)
+    group_by_query = "GROUP BY #{dimensions.join(', ')}"
+
+    [select_query, from_query, join_query, where_query, group_by_query].compact.join(' ') + ";"
+  end
+
+  def construct_where_query(filters, level)
+    return nil if filters.empty?
+
+    conditions = filters.map do |key, value|
+      transformed_key = transform_dimensions([key], level).first
+
+      if value.is_a?(Array)
+        # Join the array values into a string, properly escaped for SQL.
+        value_list = value.map { |v| ActiveRecord::Base.connection.quote(v) }.join(', ')
+        "#{transformed_key} IN (#{value_list})"
       else
-        column
+        "#{transformed_key} = #{ActiveRecord::Base.connection.quote(value)}"
       end
+    end.join(' AND ')
+
+    "WHERE #{conditions}"
+  end
+
+  def execute_and_print_results(query)
+    results = ActiveRecord::Base.connection.execute(query)
+    results.each do |row|
+      row.each { |column, value| puts "#{column}: #{value}" }
     end
-  end
-
-  def construct_sql_query(metrics, dimensions,filters, level)
-    dimensions = transform_dimensions(dimensions, level)
-    metrics = transform_metrics(metrics, level)
-    puts "dimensions___ #{dimensions.inspect}"
-    puts "metrics ___ #{metrics.inspect}"
-
-    metrics_level = METRICS_ASSOCIATION[level]
-    select_query = 'SELECT ' + (metrics + dimensions).join(',')
-    from_query = 'FROM ' + metrics_level
-    join_query = " JOIN  #{level}_dimensions ON  #{metrics_level}.#{JOIN_KEY[metrics_level]} = #{level}_dimensions.id"
-    group_by_query = ' GROUP BY ' + dimensions.join(',')
-    filter_query = construct_filter_query(filters, level)
-
-    [select_query, from_query, join_query, filter_query, group_by_query].join(' ')
-  end
-
-  def construct_filter_query(filters, level)
-    query = []
-    filters.each do |key,value|
-      t_key = transform_dimensions([key], level)
-      query.push("#{t_key} = #{value}")
-    end
-    'WHERE ' + query.join(',')
-  end
-
-  def construct_join_query(nodes, table)
-    join_query = []
-    prev = table
-    nodes.each do |node|
-      prev_key = JOIN_KEY[node] || 'id'
-      join_query.push("INNER JOIN #{node} ON #{prev}.#{prev_key} = #{node}.id")
-      prev = node
-    end
-    join_query.join(' ')
-  end
-
-  def construct_select_query(metrics, dimensions)
-    'SELECT ' + (metrics + dimensions).join(', ')
   end
 end
+
