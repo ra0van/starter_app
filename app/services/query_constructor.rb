@@ -77,11 +77,11 @@ class AdsQueryInterface
     metrics_table = METRICS_ASSOCIATION[level]
 
     # Start constructing the SQL query
-    select_query = "SELECT #{(metrics + dimensions).join(', ')}"
+    select_query = "SELECT #{(dimensions + metrics).join(', ')}"
     from_query = "FROM #{primary_dimension_table}"
 
     # Adjust the join to link the primary dimension table with the metrics table
-    join_query = "LEFT JOIN #{metrics_table} ON #{metrics_table}.#{JOIN_KEY[metrics_table]} = #{primary_dimension_table}.id"
+    join_query = "LEFT JOIN #{metrics_table} ON #{primary_dimension_table}.id =  #{metrics_table}.#{JOIN_KEY[metrics_table]}"
 
     where_query = construct_where_query(filters, level)
     group_by_query = "GROUP BY #{dimensions.join(', ')}"
