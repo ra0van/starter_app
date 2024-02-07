@@ -12,8 +12,8 @@ namespace :Facebook do
     # puts query
 
     puts "============"
-    selected_fields = ['adset.name', 'campaign.name', 'account.name', 'account.currency', 'clicks', 'ctr', 'cplc', 'spend']
+    selected_fields = ['adset.name', 'campaign.name', 'account.name', 'account.currency', 'clicks', 'ctr', 'cplc', 'spend', 'roi', 'revenue']
     query = q.generate_query(selected_fields,  { 'event_date' => ['01/01/2024','01/27/2024'] })
-    puts query
+    # puts query
   end
 end

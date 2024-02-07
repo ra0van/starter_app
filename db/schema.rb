@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_02_04_174807) do
+ActiveRecord::Schema[7.1].define(version: 2024_02_07_081639) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -99,6 +99,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_04_174807) do
     t.string "account_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.float "revenue"
     t.index ["account_id", "event_date"], name: "index_ad_metrics_on_account_id_and_event_date"
     t.index ["ad_id", "event_date"], name: "index_ad_metrics_on_ad_id_and_event_date", unique: true
   end
@@ -133,6 +134,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_04_174807) do
     t.string "account_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.float "revenue"
     t.index ["account_id", "event_date"], name: "index_adaccount_metrics_on_account_id_and_event_date", unique: true
   end
 
@@ -151,6 +153,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_04_174807) do
     t.string "account_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.float "revenue"
     t.index ["account_id", "event_date"], name: "index_adcampaign_metrics_on_account_id_and_event_date"
     t.index ["campaign_id", "event_date"], name: "index_adcampaign_metrics_on_campaign_id_and_event_date", unique: true
   end
@@ -209,6 +212,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_04_174807) do
     t.string "account_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.float "revenue"
     t.index ["account_id", "event_date"], name: "index_adset_metrics_on_account_id_and_event_date"
     t.index ["adset_id", "event_date"], name: "index_adset_metrics_on_adset_id_and_event_date", unique: true
   end

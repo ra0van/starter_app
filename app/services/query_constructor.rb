@@ -2,11 +2,11 @@
 
 class AdsQueryInterface
   METRICS_COLUMNS = %w[
-    clicks ctr link_clicks comments impressions likes spend links_ctr cplc
+    clicks ctr link_clicks comments impressions likes spend links_ctr cplc roi spend revenue
   ].freeze
 
   DERIVED_METRICS = %w[
-    ctr link_ctr cplc
+    ctr link_ctr cplc roi
   ].freeze
 
   HIERARCHY = { 'account' => 0, 'campaign' => 1, 'adset' => 2, 'ad' => 3 }.freeze
@@ -44,7 +44,7 @@ class AdsQueryInterface
     prefix = METRICS_ASSOCIATION[level]
     metrics.map do |metric|
       case metric
-      when 'ctr', 'links_ctr', 'cplc'
+      when 'ctr', 'links_ctr', 'cplc', 'roi'
         transform_derived_metrics(metric, prefix)
       else
         "SUM(#{prefix}.#{metric}) AS #{metric}"
@@ -60,6 +60,8 @@ class AdsQueryInterface
       "SUM(#{prefix}.link_clicks) AS link_clicks, SUM(#{prefix}.link_click_impression) AS link_click_impression"
     when 'cplc'
       "SUM(#{prefix}.link_click_cost) AS link_click_cost, SUM(#{prefix}.link_clicks) AS link_clicks"
+    when 'roi'
+      "SUM(#{prefix}.spend) AS spend, SUM(#{prefix}.revenue) AS revenue"
     end
   end
 
@@ -127,45 +129,64 @@ class AdsQueryInterface
     puts query
     results = ActiveRecord::Base.connection.execute(query)
 
-    results = convert_derived_metrics(results, fields)
-    columns = results.first.keys
-    puts "Columns: #{columns.join(', ')}"
+    final_columns_set = [].to_set
+
+    enriched_results = results.map do |row|
+      convert_derived_metrics(row, fields)
+      final_columns_set.merge(row.keys)
+      row
+    end
+
+    final_columns_set = final_columns_set.select do |col|
+      if METRICS_COLUMNS.include?(col)
+        fields.include?(col)
+      else
+        true
+      end
+    end
+
+    puts "Columns: #{final_columns_set.join(', ')}"
 
     puts "#{results.count} records fetched"
-    results.each do |row|
-      columns.each do |field|
+    enriched_results.each do |row|
+      final_columns_set.each do |field|
         value = row.has_key?(field) ? (row[field].nil? ? 'NULL' : row[field]) : 'N/A'
         puts "#{field}: #{value}"
       end
+      puts row
       puts '====='
     end
   end
 
-  def convert_derived_metrics(results, metrics)
-    results.each do |row|
-      # Calculate and add derived metrics directly to the row
-      if metrics.include?('ctr') && row.has_key?('clicks') && row.has_key?('impressions')
-        clicks = row['clicks'].to_f
-        impressions = row['impressions'].to_f
-        # Only add 'ctr' if both clicks and impressions are present and not nil
-        row['ctr'] = impressions > 0 ? (clicks / impressions).round(4) : nil unless clicks.nil? || impressions.nil?
-      end
+  def convert_derived_metrics(row, metrics)
+    # Calculate and add derived metrics directly to the row
+    if metrics.include?('ctr') && row.has_key?('clicks') && row.has_key?('impressions')
+      clicks = row['clicks'].to_f
+      impressions = row['impressions'].to_f
+      # Only add 'ctr' if both clicks and impressions are present and not nil
+      row['ctr'] = impressions > 0 ? ((clicks / impressions).round(4))* 100 : nil unless clicks.nil? || impressions.nil?
+    end
 
-      if metrics.include?('links_ctr') && row.has_key?('link_clicks') && row.has_key?('link_click_impressions')
-        link_clicks = row['link_clicks'].to_f
-        link_click_impressions = row['link_click_impressions'].to_f
-        # Only add 'links_ctr' if both link_clicks and link_click_impressions are present and not nil
-        row['links_ctr'] = link_click_impressions > 0 ? (link_clicks / link_click_impressions).round(4) : nil unless link_clicks.nil? || link_click_impressions.nil?
-      end
+    if metrics.include?('links_ctr') && row.has_key?('link_clicks') && row.has_key?('link_click_impressions')
+      link_clicks = row['link_clicks'].to_f
+      link_click_impressions = row['link_click_impressions'].to_f
+      # Only add 'links_ctr' if both link_clicks and link_click_impressions are present and not nil
+      row['links_ctr'] = link_click_impressions > 0 ? ((link_clicks / link_click_impressions).round(4)) * 100 : nil unless link_clicks.nil? || link_click_impressions.nil?
+    end
 
-      if metrics.include?('cplc') && row.has_key?('link_click_cost') && row.has_key?('link_clicks')
-        link_click_cost = row['link_click_cost'].to_f
-        link_clicks = row['link_clicks'].to_f
-        # Only add 'cplc' if both link_click_cost and link_clicks are present and not nil
-        row['cplc'] = link_clicks > 0 ? (link_click_cost / link_clicks).round(4) : nil unless link_click_cost.nil? || link_clicks.nil?
-      end
+    if metrics.include?('cplc') && row.has_key?('link_click_cost') && row.has_key?('link_clicks')
+      link_click_cost = row['link_click_cost'].to_f
+      link_clicks = row['link_clicks'].to_f
+      # Only add 'cplc' if both link_click_cost and link_clicks are present and not nil
+      row['cplc'] = link_clicks > 0 ? (link_click_cost / link_clicks).round(4) : nil unless link_click_cost.nil? || link_clicks.nil?
+    end
 
-      # Non-derived metrics are already part of the row and do not need to be added or modified
+    if metrics.include?('roi') && row.has_key?('spend') && row.has_key?('revenue')
+      spend = row['spend'].to_f
+      revenue = row['spend'].to_f
+      if row['spend'] = nil || row['revenue'] != nil
+        row['roi'] = spend != 0 && !spend.nil? && revenue != 0 && !revenue.nil? ? (revenue / spend).round(4) : nil
+      end
     end
   end
 end
