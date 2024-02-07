@@ -12,7 +12,7 @@ class AdsQueryInterface
   HIERARCHY = { 'account' => 0, 'campaign' => 1, 'adset' => 2, 'ad' => 3 }.freeze
 
   JOIN_KEY = {
-    'adaccount_metrics' => 'account_id', 'campaign_metrics' => 'campaign_id',
+    'adaccount_metrics' => 'account_id', 'adcampaign_metrics' => 'campaign_id',
     'adset_metrics' => 'adset_id', 'ad_metrics' => 'ad_id'
   }.freeze
 
@@ -29,7 +29,7 @@ class AdsQueryInterface
     transformed_dimensions = transform_dimensions(dimensions, level)
 
     query = construct_sql_query(transformed_metrics, transformed_dimensions, filters, level)
-    execute_and_print_results(query)
+    execute_and_print_results(query, fields, level)
   end
 
   private
@@ -72,9 +72,17 @@ class AdsQueryInterface
   end
 
   def construct_sql_query(metrics, dimensions, filters, level)
+    # Determine the primary dimension and metrics table names
+    primary_dimension_table = "#{level}_dimensions"
+    metrics_table = METRICS_ASSOCIATION[level]
+
+    # Start constructing the SQL query
     select_query = "SELECT #{(metrics + dimensions).join(', ')}"
-    from_query = "FROM #{METRICS_ASSOCIATION[level]}"
-    join_query = "JOIN #{level}_dimensions ON #{METRICS_ASSOCIATION[level]}.#{JOIN_KEY[METRICS_ASSOCIATION[level]]} = #{level}_dimensions.id"
+    from_query = "FROM #{primary_dimension_table}"
+
+    # Adjust the join to link the primary dimension table with the metrics table
+    join_query = "LEFT JOIN #{metrics_table} ON #{metrics_table}.#{JOIN_KEY[metrics_table]} = #{primary_dimension_table}.id"
+
     where_query = construct_where_query(filters, level)
     group_by_query = "GROUP BY #{dimensions.join(', ')}"
 
@@ -85,12 +93,28 @@ class AdsQueryInterface
     return nil if filters.empty?
 
     conditions = filters.map do |key, value|
-      transformed_key = transform_dimensions([key], level).first
-
-      if value.is_a?(Array)
+      # transformed_key = transform_dimensions([key], level).first
+      transformed_key = if key.to_s.downcase.include?('date')
+                          # Date filters should be applied to the metrics table
+                          "#{METRICS_ASSOCIATION[level]}.#{key}"
+                        else
+                          # Other filters are applied based on dimensions
+                          transform_dimensions([key], level).first
+                        end
+      if key.to_s.downcase.include?('date')
+        if value.is_a?(String)
+          date = ActiveRecord::Base.connection.quote(value)
+          "#{transformed_key} = #{date}"
+        elsif value.is_a?(Array) && value.length == 2
+          start_date = ActiveRecord::Base.connection.quote(value.first)
+          end_date = ActiveRecord::Base.connection.quote(value.last)
+          "#{transformed_key} BETWEEN #{start_date} AND #{end_date}"
+        end
+      elsif value.is_a?(Array)
         # Join the array values into a string, properly escaped for SQL.
         value_list = value.map { |v| ActiveRecord::Base.connection.quote(v) }.join(', ')
         "#{transformed_key} IN (#{value_list})"
+        "#{transformed_key} BETWEEN #{start_date} AND #{end_date}"
       else
         "#{transformed_key} = #{ActiveRecord::Base.connection.quote(value)}"
       end
@@ -99,11 +123,49 @@ class AdsQueryInterface
     "WHERE #{conditions}"
   end
 
-  def execute_and_print_results(query)
+  def execute_and_print_results(query, fields, level)
+    puts query
     results = ActiveRecord::Base.connection.execute(query)
+
+    results = convert_derived_metrics(results, fields)
+    columns = results.first.keys
+    puts "Columns: #{columns.join(', ')}"
+
+    puts "#{results.count} records fetched"
     results.each do |row|
-      row.each { |column, value| puts "#{column}: #{value}" }
+      columns.each do |field|
+        value = row.has_key?(field) ? (row[field].nil? ? 'NULL' : row[field]) : 'N/A'
+        puts "#{field}: #{value}"
+      end
+      puts '====='
+    end
+  end
+
+  def convert_derived_metrics(results, metrics)
+    results.each do |row|
+      # Calculate and add derived metrics directly to the row
+      if metrics.include?('ctr') && row.has_key?('clicks') && row.has_key?('impressions')
+        clicks = row['clicks'].to_f
+        impressions = row['impressions'].to_f
+        # Only add 'ctr' if both clicks and impressions are present and not nil
+        row['ctr'] = impressions > 0 ? (clicks / impressions).round(4) : nil unless clicks.nil? || impressions.nil?
+      end
+
+      if metrics.include?('links_ctr') && row.has_key?('link_clicks') && row.has_key?('link_click_impressions')
+        link_clicks = row['link_clicks'].to_f
+        link_click_impressions = row['link_click_impressions'].to_f
+        # Only add 'links_ctr' if both link_clicks and link_click_impressions are present and not nil
+        row['links_ctr'] = link_click_impressions > 0 ? (link_clicks / link_click_impressions).round(4) : nil unless link_clicks.nil? || link_click_impressions.nil?
+      end
+
+      if metrics.include?('cplc') && row.has_key?('link_click_cost') && row.has_key?('link_clicks')
+        link_click_cost = row['link_click_cost'].to_f
+        link_clicks = row['link_clicks'].to_f
+        # Only add 'cplc' if both link_click_cost and link_clicks are present and not nil
+        row['cplc'] = link_clicks > 0 ? (link_click_cost / link_clicks).round(4) : nil unless link_click_cost.nil? || link_clicks.nil?
+      end
+
+      # Non-derived metrics are already part of the row and do not need to be added or modified
     end
   end
 end
-
