@@ -73,7 +73,7 @@ RSpec.describe Extractor, type: :service do
     context 'when the same ad is to be updated, ad data is upserted correctly' do
       it 'extracts and upserts ad insights data correctly' do
         # Mock Facebook API data
-        AdMetrics.create({'clicks' => 100, 'ctr' => 0.1, 'link_clicks' => 50, 'event_date' => '2022-01-01','comments' => 5, 'spend' => 50.0, 'ad_id' => '1', 'account_id' => 'A1' })
+        AdMetrics.create({'clicks' => 100, 'link_clicks' => 50, 'event_date' => '2022-01-01','comments' => 5, 'spend' => 50.0, 'ad_id' => '1', 'account_id' => 'A1' })
 
         ad = AdMetrics.find_by(ad_id: '1', event_date: '2022-01-01')
         expect(ad).to_not be_nil
@@ -138,7 +138,7 @@ RSpec.describe Extractor, type: :service do
   describe '#extract_and_save_adset_metrics' do
     it 'extracts and upserts adset metrics data correctly' do
       # Mock Facebook API data
-      api_data = [{ 'clicks' => 100, 'ctr' => 0.1, 'inline_link_clicks' => 50, 'date_stop' => '2022-01-01',
+      api_data = [{ 'clicks' => 100, 'inline_link_clicks' => 50, 'date_stop' => '2022-01-01',
                     'comments' => 5, 'spend' => 50.0, 'adset_id' => '1', 'account_id' => 'A1' }]
 
       # Execute the transformation

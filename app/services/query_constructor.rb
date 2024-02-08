@@ -36,6 +36,7 @@ class AdsQueryInterface
 
   def separate_fields(fields)
     metrics, dimensions = fields.partition { |field| METRICS_COLUMNS.include?(field) }
+    puts dimensions
     lowest_dim_index = dimensions.map { |field| HIERARCHY[field.split('.').first] }.max || -1
     [metrics, dimensions, HIERARCHY.key(lowest_dim_index)]
   end

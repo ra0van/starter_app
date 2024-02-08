@@ -12,8 +12,9 @@ namespace :Facebook do
     # puts query
 
     puts "============"
-    selected_fields = ['adset.name', 'campaign.name', 'account.name', 'account.currency', 'clicks', 'ctr', 'cplc', 'spend', 'roi', 'revenue']
-    query = q.generate_query(selected_fields,  { 'event_date' => ['01/01/2024','01/27/2024'] })
+    #selected_fields = ['adset.name', 'campaign.name', 'account.name', 'account.currency', 'clicks', 'ctr', 'cplc', 'spend', 'roi', 'revenue']
+    selected_fields = ['account.name', 'account.currency', 'spend', 'clicks', 'revenue', 'roi']
+    query = q.generate_query(selected_fields,  { 'event_date' => ['01/27/2024','02/03/2024'] })
     # puts query
   end
 end
