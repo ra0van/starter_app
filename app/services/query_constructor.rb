@@ -183,8 +183,8 @@ class AdsQueryInterface
 
     if metrics.include?('roi') && row.has_key?('spend') && row.has_key?('revenue')
       spend = row['spend'].to_f
-      revenue = row['spend'].to_f
-      if row['spend'] = nil || row['revenue'] != nil
+      revenue = row['revenue'].to_f
+      if row['spend'] != nil || row['revenue'] != nil
         row['roi'] = spend != 0 && !spend.nil? && revenue != 0 && !revenue.nil? ? (revenue / spend).round(4) : nil
       end
     end
