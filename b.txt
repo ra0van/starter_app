@@ -1,0 +1,47 @@
+============
+account.name
+SELECT account_dimensions.name, SUM(adaccount_metrics.spend) AS spend, SUM(adaccount_metrics.clicks) AS clicks, SUM(adaccount_metrics.revenue) AS revenue, SUM(adaccount_metrics.spend) AS spend, SUM(adaccount_metrics.revenue) AS revenue FROM account_dimensions LEFT JOIN adaccount_metrics ON account_dimensions.id =  adaccount_metrics.account_id WHERE adaccount_metrics.event_date BETWEEN '27/01/2024' AND '03/02/2024' GROUP BY account_dimensions.name;
+Columns: name, spend, clicks, revenue, roi
+6 records fetched
+name: Ajio Installs
+spend: 12811102.61
+clicks: 22493853
+revenue: NULL
+roi: NULL
+{"name"=>"Ajio Installs", "spend"=>12811102.61, "clicks"=>22493853, "revenue"=>nil, "roi"=>nil}
+=====
+name: Ajio Installs Account2
+spend: 3043679.07
+clicks: 3865063
+revenue: NULL
+roi: NULL
+{"name"=>"Ajio Installs Account2", "spend"=>3043679.07, "clicks"=>3865063, "revenue"=>nil, "roi"=>nil}
+=====
+name: Ajio Installs - iOS
+spend: 269481.59
+clicks: 223354
+revenue: NULL
+roi: NULL
+{"name"=>"Ajio Installs - iOS", "spend"=>269481.59, "clicks"=>223354, "revenue"=>nil, "roi"=>nil}
+=====
+name: AJIOLife Men
+spend: 26731100.049999997
+clicks: 29488683
+revenue: NULL
+roi: NULL
+{"name"=>"AJIOLife Men", "spend"=>26731100.049999997, "clicks"=>29488683, "revenue"=>nil, "roi"=>nil}
+=====
+name: AJIO_LUXE
+spend: 3885461.9499999997
+clicks: 1767575
+revenue: NULL
+roi: NULL
+{"name"=>"AJIO_LUXE", "spend"=>3885461.9499999997, "clicks"=>1767575, "revenue"=>nil, "roi"=>nil}
+=====
+name: Ajio New Visitors
+spend: 783166.55
+clicks: 739533
+revenue: NULL
+roi: NULL
+{"name"=>"Ajio New Visitors", "spend"=>783166.55, "clicks"=>739533, "revenue"=>nil, "roi"=>nil}
+=====
