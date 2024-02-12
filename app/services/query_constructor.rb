@@ -45,8 +45,10 @@ class AdsQueryInterface
     prefix = METRICS_ASSOCIATION[level]
     metrics.map do |metric|
       case metric
-      when 'ctr', 'links_ctr', 'cplc', 'roi'
+      when 'ctr', 'links_ctr', 'cplc', 'roi' 
         transform_derived_metrics(metric, prefix)
+      when 'revenue'
+        'SUM(google_revenues.revenue) AS revenue'
       else
         "SUM(#{prefix}.#{metric}) AS #{metric}"
       end
@@ -62,7 +64,7 @@ class AdsQueryInterface
     when 'cplc'
       "SUM(#{prefix}.link_click_cost) AS link_click_cost, SUM(#{prefix}.link_clicks) AS link_clicks"
     when 'roi'
-      "SUM(#{prefix}.spend) AS spend, SUM(#{prefix}.revenue) AS revenue"
+      "SUM(#{prefix}.spend) AS spend, SUM(google_revenues.revenue) AS revenue"
     end
   end
 
@@ -81,15 +83,16 @@ class AdsQueryInterface
 
     # Start constructing the SQL query
     select_query = "SELECT #{(dimensions + metrics).join(', ')}"
-    from_query = "FROM #{primary_dimension_table}"
+    from_query = "FROM #{metrics_table}"
 
     # Adjust the join to link the primary dimension table with the metrics table
-    join_query = "LEFT JOIN #{metrics_table} ON #{primary_dimension_table}.id =  #{metrics_table}.#{JOIN_KEY[metrics_table]}"
+    join_query = "LEFT JOIN #{primary_dimension_table} ON #{primary_dimension_table}.id =  #{metrics_table}.#{JOIN_KEY[metrics_table]}"
+    revenues_join = "LEFT JOIN google_revenues ON google_revenues.#{JOIN_KEY[metrics_table]} = #{metrics_table}.#{JOIN_KEY[metrics_table]} AND #{metrics_table}.event_date = google_revenues.event_date"
 
     where_query = construct_where_query(filters, level)
     group_by_query = "GROUP BY #{dimensions.join(', ')}"
 
-    [select_query, from_query, join_query, where_query, group_by_query].compact.join(' ') + ";"
+    [select_query, from_query, join_query, revenues_join, where_query, group_by_query].compact.join(' ') + ";"
   end
 
   def construct_where_query(filters, level)
@@ -117,7 +120,6 @@ class AdsQueryInterface
         # Join the array values into a string, properly escaped for SQL.
         value_list = value.map { |v| ActiveRecord::Base.connection.quote(v) }.join(', ')
         "#{transformed_key} IN (#{value_list})"
-        "#{transformed_key} BETWEEN #{start_date} AND #{end_date}"
       else
         "#{transformed_key} = #{ActiveRecord::Base.connection.quote(value)}"
       end

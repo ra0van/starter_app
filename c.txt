@@ -1,0 +1,439 @@
+============
+campaign.name
+SELECT campaign_dimensions.name, SUM(adcampaign_metrics.spend) AS spend, SUM(adcampaign_metrics.clicks) AS clicks, SUM(google_revenues.revenue) AS revenue, SUM(adcampaign_metrics.spend) AS spend, SUM(google_revenues.revenue) AS revenue FROM adcampaign_metrics LEFT JOIN campaign_dimensions ON campaign_dimensions.id =  adcampaign_metrics.campaign_id LEFT JOIN google_revenues ON google_revenues.campaign_id = adcampaign_metrics.campaign_id AND adcampaign_metrics.event_date = google_revenues.event_date WHERE adcampaign_metrics.event_date BETWEEN '01/27/2024' AND '02/03/2024' GROUP BY campaign_dimensions.name;
+Columns: name, spend, clicks, revenue, roi
+62 records fetched
+name: NDPA_NS_LAInstalledPurchsed_30D_Pur
+spend: 966165.94
+clicks: 1285786
+revenue: 3063828.54550902
+roi: 3.1711
+{"name"=>"NDPA_NS_LAInstalledPurchsed_30D_Pur", "spend"=>966165.94, "clicks"=>1285786, "revenue"=>3063828.54550902, "roi"=>3.1711}
+=====
+name: NDPA_NS_LABuyers_ROI_HunterF_18-65_OBJ-Pur
+spend: 159345.84
+clicks: 185155
+revenue: 394312.7677896174
+roi: 2.4746
+{"name"=>"NDPA_NS_LABuyers_ROI_HunterF_18-65_OBJ-Pur", "spend"=>159345.84, "clicks"=>185155, "revenue"=>394312.7677896174, "roi"=>2.4746}
+=====
+name: DPA_gt-All_t-iOS_VC_Last90days
+spend: 3198984.28
+clicks: 5815874
+revenue: 7183599.393314591
+roi: 2.2456
+{"name"=>"DPA_gt-All_t-iOS_VC_Last90days", "spend"=>3198984.28, "clicks"=>5815874, "revenue"=>7183599.393314591, "roi"=>2.2456}
+=====
+name: DPA_AppUpsellNew_Pur
+spend: 1346539.94
+clicks: 1711232
+revenue: 5153136.888547921
+roi: 3.8269
+{"name"=>"DPA_AppUpsellNew_Pur", "spend"=>1346539.94, "clicks"=>1711232, "revenue"=>5153136.888547921, "roi"=>3.8269}
+=====
+name: BI_gt-All_t-AAA_ds-Lockdown_Duplicate
+spend: 134735.13
+clicks: 148049
+revenue: 378118.89570239
+roi: 2.8064
+{"name"=>"BI_gt-All_t-AAA_ds-Lockdown_Duplicate", "spend"=>134735.13, "clicks"=>148049, "revenue"=>378118.89570239, "roi"=>2.8064}
+=====
+name: NV_gt_All_Opentargeting_AjioGrm_VC_Video
+spend: 287968.2100000001
+clicks: 188037
+revenue: 2458009.164037058
+roi: 8.5357
+{"name"=>"NV_gt_All_Opentargeting_AjioGrm_VC_Video", "spend"=>287968.2100000001, "clicks"=>188037, "revenue"=>2458009.164037058, "roi"=>8.5357}
+=====
+name: NDPA_NS_Buyers_Lapsed_F_18-65_OBJ-VC_Duplicate_D2_iOS_LC
+spend: 949176.4999999999
+clicks: 1115618
+revenue: 1934917.7386786444
+roi: 2.0385
+{"name"=>"NDPA_NS_Buyers_Lapsed_F_18-65_OBJ-VC_Duplicate_D2_iOS_LC", "spend"=>949176.4999999999, "clicks"=>1115618, "revenue"=>1934917.7386786444, "roi"=>2.0385}
+=====
+name: NDPA_NS_ASC_80%Exis_Obj_Pur Campaign
+spend: 1416062.4100000001
+clicks: 1874928
+revenue: 4146505.7175777564
+roi: 2.9282
+{"name"=>"NDPA_NS_ASC_80%Exis_Obj_Pur Campaign", "spend"=>1416062.4100000001, "clicks"=>1874928, "revenue"=>4146505.7175777564, "roi"=>2.9282}
+=====
+name: NV_gt_All_Opentargeting_AjioGrm_Pur_insta
+spend: 78744.29000000001
+clicks: 59660
+revenue: NULL
+roi: NULL
+{"name"=>"NV_gt_All_Opentargeting_AjioGrm_Pur_insta", "spend"=>78744.29000000001, "clicks"=>59660, "revenue"=>nil, "roi"=>nil}
+=====
+name: NV_gt_All_AjioGrm_NotPurInLast14Days_Pur
+spend: 39512.659999999996
+clicks: 7056
+revenue: NULL
+roi: NULL
+{"name"=>"NV_gt_All_AjioGrm_NotPurInLast14Days_Pur", "spend"=>39512.659999999996, "clicks"=>7056, "revenue"=>nil, "roi"=>nil}
+=====
+name: DPA_AppUpSellKidsTshirt299_Pur
+spend: 79101.23
+clicks: 90868
+revenue: 196064.3371809207
+roi: 2.4787
+{"name"=>"DPA_AppUpSellKidsTshirt299_Pur", "spend"=>79101.23, "clicks"=>90868, "revenue"=>196064.3371809207, "roi"=>2.4787}
+=====
+name: DPA_gt-All_t-EB0AppA2C_ds-Lockdown
+spend: 581843.02
+clicks: 520295
+revenue: 1854816.451969184
+roi: 3.1878
+{"name"=>"DPA_gt-All_t-EB0AppA2C_ds-Lockdown", "spend"=>581843.02, "clicks"=>520295, "revenue"=>1854816.451969184, "roi"=>3.1878}
+=====
+name: DPA_gt-All_t-AppCABuyersList_ds-Lockdown_Duplicate_BidCap
+spend: 2108289.65
+clicks: 8612223
+revenue: 5877783.267608069
+roi: 2.7879
+{"name"=>"DPA_gt-All_t-AppCABuyersList_ds-Lockdown_Duplicate_BidCap", "spend"=>2108289.65, "clicks"=>8612223, "revenue"=>5877783.267608069, "roi"=>2.7879}
+=====
+name: DPA_App_AFBigSaleBuyers_Partywear_Pur
+spend: 613279.9099999999
+clicks: 510538
+revenue: 1358925.2206172666
+roi: 2.2158
+{"name"=>"DPA_App_AFBigSaleBuyers_Partywear_Pur", "spend"=>613279.9099999999, "clicks"=>510538, "revenue"=>1358925.2206172666, "roi"=>2.2158}
+=====
+name: NDPA_NS_LAiOSPurchsedGT5000_180D_LC
+spend: 158346.95
+clicks: 278737
+revenue: 451482.87925681064
+roi: 2.8512
+{"name"=>"NDPA_NS_LAiOSPurchsedGT5000_180D_LC", "spend"=>158346.95, "clicks"=>278737, "revenue"=>451482.87925681064, "roi"=>2.8512}
+=====
+name: DPA_gt-All_t-AppCrossSellKids_ds-Lockdown_D_CBO
+spend: 953689.5
+clicks: 472702
+revenue: 3054541.6990225334
+roi: 3.2029
+{"name"=>"DPA_gt-All_t-AppCrossSellKids_ds-Lockdown_D_CBO", "spend"=>953689.5, "clicks"=>472702, "revenue"=>3054541.6990225334, "roi"=>3.2029}
+=====
+name: NDPA_NS_LAInstallednotPurchsed_15D_Pur
+spend: 783671.12
+clicks: 907238
+revenue: 1914694.4423829613
+roi: 2.4432
+{"name"=>"NDPA_NS_LAInstallednotPurchsed_15D_Pur", "spend"=>783671.12, "clicks"=>907238, "revenue"=>1914694.4423829613, "roi"=>2.4432}
+=====
+name: DPA_gt-All_t-AppCrosssell_ds-Lockdown_BidCap_3
+spend: 1253089.42
+clicks: 1335014
+revenue: 3493376.2380469837
+roi: 2.7878
+{"name"=>"DPA_gt-All_t-AppCrosssell_ds-Lockdown_BidCap_3", "spend"=>1253089.42, "clicks"=>1335014, "revenue"=>3493376.2380469837, "roi"=>2.7878}
+=====
+name: DPA_AppCrossSell_NewArrival_Pur
+spend: 949123.9299999999
+clicks: 539447
+revenue: 2353305.2609288036
+roi: 2.4794
+{"name"=>"DPA_AppCrossSell_NewArrival_Pur", "spend"=>949123.9299999999, "clicks"=>539447, "revenue"=>2353305.2609288036, "roi"=>2.4794}
+=====
+name: NDPA_NS_LAEthnicBuyer_Pur
+spend: 812987.7499999999
+clicks: 783126
+revenue: 2442864.4882350946
+roi: 3.0048
+{"name"=>"NDPA_NS_LAEthnicBuyer_Pur", "spend"=>812987.7499999999, "clicks"=>783126, "revenue"=>2442864.4882350946, "roi"=>3.0048}
+=====
+name: DPA_gt-F_t-AppVisitors_ds-Lockdown
+spend: 79409.70999999999
+clicks: 230871
+revenue: 150459.91764521683
+roi: 1.8947
+{"name"=>"DPA_gt-F_t-AppVisitors_ds-Lockdown", "spend"=>79409.70999999999, "clicks"=>230871, "revenue"=>150459.91764521683, "roi"=>1.8947}
+=====
+name: DPA_APP_AFCart_abondaners_Android
+spend: 713630.87
+clicks: 675755
+revenue: 2178544.945771295
+roi: 3.0528
+{"name"=>"DPA_APP_AFCart_abondaners_Android", "spend"=>713630.87, "clicks"=>675755, "revenue"=>2178544.945771295, "roi"=>3.0528}
+=====
+name: NDPA_NS_Buyers_Lapsed_F_18-65_OBJ-VC_Duplicate_D2
+spend: 79690.34
+clicks: 333123
+revenue: 148769.05162112234
+roi: 1.8668
+{"name"=>"NDPA_NS_Buyers_Lapsed_F_18-65_OBJ-VC_Duplicate_D2", "spend"=>79690.34, "clicks"=>333123, "revenue"=>148769.05162112234, "roi"=>1.8668}
+=====
+name: NDPA_NS_Buyer_Lookalike_M_0-5_OBJ-Pur_Duplicate
+spend: 159050.85
+clicks: 214600
+revenue: 433156.05429760524
+roi: 2.7234
+{"name"=>"NDPA_NS_Buyer_Lookalike_M_0-5_OBJ-Pur_Duplicate", "spend"=>159050.85, "clicks"=>214600, "revenue"=>433156.05429760524, "roi"=>2.7234}
+=====
+name: DPA_gt-All_t-EB0AppVisitor_ds-Lockdown
+spend: 797481.47
+clicks: 800321
+revenue: 1964660.7715717957
+roi: 2.4636
+{"name"=>"DPA_gt-All_t-EB0AppVisitor_ds-Lockdown", "spend"=>797481.47, "clicks"=>800321, "revenue"=>1964660.7715717957, "roi"=>2.4636}
+=====
+name: NDPA_NS_LABuyers_ROIHunter_Discounted Bestsellers_Pur
+spend: 399015.55
+clicks: 597629
+revenue: 1271268.5420284623
+roi: 3.186
+{"name"=>"NDPA_NS_LABuyers_ROIHunter_Discounted Bestsellers_Pur", "spend"=>399015.55, "clicks"=>597629, "revenue"=>1271268.5420284623, "roi"=>3.186}
+=====
+name: DPA_gt-All_t-AppUpsell_ds-Lockdown
+spend: 2053294.62
+clicks: 2684622
+revenue: 6239533.721971213
+roi: 3.0388
+{"name"=>"DPA_gt-All_t-AppUpsell_ds-Lockdown", "spend"=>2053294.62, "clicks"=>2684622, "revenue"=>6239533.721971213, "roi"=>3.0388}
+=====
+name: NDPA_NS_LAWinterwearBuyer_Pur
+spend: 952893.15
+clicks: 808874
+revenue: 3404837.2884957963
+roi: 3.5732
+{"name"=>"NDPA_NS_LAWinterwearBuyer_Pur", "spend"=>952893.15, "clicks"=>808874, "revenue"=>3404837.2884957963, "roi"=>3.5732}
+=====
+name: NDPA_NS_Buyers_Lapsed_M_18-65_OBJ-VC_Duplicate
+spend: 79697.21
+clicks: 287335
+revenue: 271513.9617976154
+roi: 3.4068
+{"name"=>"NDPA_NS_Buyers_Lapsed_M_18-65_OBJ-VC_Duplicate", "spend"=>79697.21, "clicks"=>287335, "revenue"=>271513.9617976154, "roi"=>3.4068}
+=====
+name: DPA_APP_AFRecent_Inactive_HLTV_Android
+spend: 716341.9800000001
+clicks: 681252
+revenue: 1834042.6213323404
+roi: 2.5603
+{"name"=>"DPA_APP_AFRecent_Inactive_HLTV_Android", "spend"=>716341.9800000001, "clicks"=>681252, "revenue"=>1834042.6213323404, "roi"=>2.5603}
+=====
+name: NV_gt_All_LAAllPurchaser_AjioGrm_Pur_iOS_LC
+spend: 39677.26
+clicks: 85992
+revenue: NULL
+roi: NULL
+{"name"=>"NV_gt_All_LAAllPurchaser_AjioGrm_Pur_iOS_LC", "spend"=>39677.26, "clicks"=>85992, "revenue"=>nil, "roi"=>nil}
+=====
+name: NDPA_NS_Buyer_Lookalike_F_0-5_OBJ-Pur_Duplicate
+spend: 159464.37000000002
+clicks: 298420
+revenue: 599260.477012905
+roi: 3.758
+{"name"=>"NDPA_NS_Buyer_Lookalike_F_0-5_OBJ-Pur_Duplicate", "spend"=>159464.37000000002, "clicks"=>298420, "revenue"=>599260.477012905, "roi"=>3.758}
+=====
+name: DPA_gt-F_t-AppA2C_ds-Lockdown
+spend: 551980.1900000001
+clicks: 896406
+revenue: 1633314.4352413365
+roi: 2.959
+{"name"=>"DPA_gt-F_t-AppA2C_ds-Lockdown", "spend"=>551980.1900000001, "clicks"=>896406, "revenue"=>1633314.4352413365, "roi"=>2.959}
+=====
+name: DPA_gt-All_t-AppCrosssell_ds-Lockdown_BidCap_2_LC_iOS
+spend: 159293.24000000002
+clicks: 133908
+revenue: 389260.75352789793
+roi: 2.4437
+{"name"=>"DPA_gt-All_t-AppCrosssell_ds-Lockdown_BidCap_2_LC_iOS", "spend"=>159293.24000000002, "clicks"=>133908, "revenue"=>389260.75352789793, "roi"=>2.4437}
+=====
+name: NDPA_gt-All_t-LA0RRLAudience_ds-Lockdown
+spend: 79429.01
+clicks: 408606
+revenue: 212252.39169640216
+roi: 2.6722
+{"name"=>"NDPA_gt-All_t-LA0RRLAudience_ds-Lockdown", "spend"=>79429.01, "clicks"=>408606, "revenue"=>212252.39169640216, "roi"=>2.6722}
+=====
+name: DPA_gt-All_t-AppUpsellKids_ds-Lockdown
+spend: 802609.85
+clicks: 876831
+revenue: 1578683.0424032249
+roi: 1.9669
+{"name"=>"DPA_gt-All_t-AppUpsellKids_ds-Lockdown", "spend"=>802609.85, "clicks"=>876831, "revenue"=>1578683.0424032249, "roi"=>1.9669}
+=====
+name: DPA_AppBBSBuyers_BlackFriday_Pur_Andr
+spend: 1116764.5
+clicks: 772203
+revenue: 3256965.3431310374
+roi: 2.9164
+{"name"=>"DPA_AppBBSBuyers_BlackFriday_Pur_Andr", "spend"=>1116764.5, "clicks"=>772203, "revenue"=>3256965.3431310374, "roi"=>2.9164}
+=====
+name: NDPA_NS_LapsedBuyers_ROIHunter_Discounted Bestseller_Pur
+spend: 423591.66000000003
+clicks: 415970
+revenue: 1340237.1720297595
+roi: 3.164
+{"name"=>"NDPA_NS_LapsedBuyers_ROIHunter_Discounted Bestseller_Pur", "spend"=>423591.66000000003, "clicks"=>415970, "revenue"=>1340237.1720297595, "roi"=>3.164}
+=====
+name: NDPA_gt-ALL_t-LA0to10LIFETIMEBUYERS_ds-Lockdown_Duplicate
+spend: 79726.48999999999
+clicks: 264751
+revenue: 247989.5672143854
+roi: 3.1105
+{"name"=>"NDPA_gt-ALL_t-LA0to10LIFETIMEBUYERS_ds-Lockdown_Duplicate", "spend"=>79726.48999999999, "clicks"=>264751, "revenue"=>247989.5672143854, "roi"=>3.1105}
+=====
+name: DPA_APPAFInstalled_notactive_And30D
+spend: 551454.97
+clicks: 605924
+revenue: 1114337.1946108185
+roi: 2.0207
+{"name"=>"DPA_APPAFInstalled_notactive_And30D", "spend"=>551454.97, "clicks"=>605924, "revenue"=>1114337.1946108185, "roi"=>2.0207}
+=====
+name: FBA_gt-All_t-CA0AllTimeBuyers_ds-Lockdown_Duplicate_Gen_CPI
+spend: 274231.80000000005
+clicks: 208673
+revenue: NULL
+roi: NULL
+{"name"=>"FBA_gt-All_t-CA0AllTimeBuyers_ds-Lockdown_Duplicate_Gen_CPI", "spend"=>274231.80000000005, "clicks"=>208673, "revenue"=>nil, "roi"=>nil}
+=====
+name: FBA_LA_HighLTV_AF_Pur
+spend: 12352877.950000001
+clicks: 10238316
+revenue: 8698065.330864336
+roi: 0.7041
+{"name"=>"FBA_LA_HighLTV_AF_Pur", "spend"=>12352877.950000001, "clicks"=>10238316, "revenue"=>8698065.330864336, "roi"=>0.7041}
+=====
+name: NDPA_NS_LA_NikePumaAdidasBuyerL90D_Pur
+spend: 342685.95
+clicks: 255246
+revenue: 997857.2050698192
+roi: 2.9119
+{"name"=>"NDPA_NS_LA_NikePumaAdidasBuyerL90D_Pur", "spend"=>342685.95, "clicks"=>255246, "revenue"=>997857.2050698192, "roi"=>2.9119}
+=====
+name: NDPA_NS_ASC_100%New_Obj_Pur
+spend: 793722.79
+clicks: 1787938
+revenue: 2388049.228693446
+roi: 3.0087
+{"name"=>"NDPA_NS_ASC_100%New_Obj_Pur", "spend"=>793722.79, "clicks"=>1787938, "revenue"=>2388049.228693446, "roi"=>3.0087}
+=====
+name: DPA_AppBBSBuyers_Clearance_Pur
+spend: 569132.0499999999
+clicks: 414348
+revenue: 2005605.1584327787
+roi: 3.524
+{"name"=>"DPA_AppBBSBuyers_Clearance_Pur", "spend"=>569132.0499999999, "clicks"=>414348, "revenue"=>2005605.1584327787, "roi"=>3.524}
+=====
+name: NDPA_NS_Buyers_Lapsed_M_18-65_OBJ-VC_Duplicate_iOS_LC
+spend: 949062.29
+clicks: 856772
+revenue: 2591626.153182406
+roi: 2.7307
+{"name"=>"NDPA_NS_Buyers_Lapsed_M_18-65_OBJ-VC_Duplicate_iOS_LC", "spend"=>949062.29, "clicks"=>856772, "revenue"=>2591626.153182406, "roi"=>2.7307}
+=====
+name: DPA_AppUpSell_Promoted_Pur
+spend: 2251178.37
+clicks: 2634845
+revenue: 6918419.951006468
+roi: 3.0732
+{"name"=>"DPA_AppUpSell_Promoted_Pur", "spend"=>2251178.37, "clicks"=>2634845, "revenue"=>6918419.951006468, "roi"=>3.0732}
+=====
+name: DPA_APP_AFCart_abondaners_iOS
+spend: 358733.99
+clicks: 258049
+revenue: 1156490.3826064586
+roi: 3.2238
+{"name"=>"DPA_APP_AFCart_abondaners_iOS", "spend"=>358733.99, "clicks"=>258049, "revenue"=>1156490.3826064586, "roi"=>3.2238}
+=====
+name: DPA_AppUpSellFootwear_Pur
+spend: 119244.81
+clicks: 81186
+revenue: 355548.6741923181
+roi: 2.9817
+{"name"=>"DPA_AppUpSellFootwear_Pur", "spend"=>119244.81, "clicks"=>81186, "revenue"=>355548.6741923181, "roi"=>2.9817}
+=====
+name: DPA_AppUpSell_Discounted_Pur
+spend: 550295.26
+clicks: 649795
+revenue: 1484177.9927207502
+roi: 2.6971
+{"name"=>"DPA_AppUpSell_Discounted_Pur", "spend"=>550295.26, "clicks"=>649795, "revenue"=>1484177.9927207502, "roi"=>2.6971}
+=====
+name: DPA_App_ASC_NonMetro_Pur Campaign
+spend: 580564.71
+clicks: 678519
+revenue: 1377871.7033483295
+roi: 2.3733
+{"name"=>"DPA_App_ASC_NonMetro_Pur Campaign", "spend"=>580564.71, "clicks"=>678519, "revenue"=>1377871.7033483295, "roi"=>2.3733}
+=====
+name: DPA_gt-All_t-EB0AppVisitorTraffic_ds-Lockdown_BidCap
+spend: 79555.63
+clicks: 905003
+revenue: 243897.2885543676
+roi: 3.0657
+{"name"=>"DPA_gt-All_t-EB0AppVisitorTraffic_ds-Lockdown_BidCap", "spend"=>79555.63, "clicks"=>905003, "revenue"=>243897.2885543676, "roi"=>3.0657}
+=====
+name: BI_gt-All_t-AAA_feed_ds-Value
+spend: 134746.46000000002
+clicks: 75305
+revenue: 235987.6986279674
+roi: 1.7513
+{"name"=>"BI_gt-All_t-AAA_feed_ds-Value", "spend"=>134746.46000000002, "clicks"=>75305, "revenue"=>235987.6986279674, "roi"=>1.7513}
+=====
+name: FBA_gt-All_t-AAA_ds-Value – New
+spend: 848876.75
+clicks: 745959
+revenue: NULL
+roi: NULL
+{"name"=>"FBA_gt-All_t-AAA_ds-Value – New", "spend"=>848876.75, "clicks"=>745959, "revenue"=>nil, "roi"=>nil}
+=====
+name: DPA_AppTrendsBrand_Pur
+spend: 761765.47
+clicks: 1002153
+revenue: 2489460.841692212
+roi: 3.268
+{"name"=>"DPA_AppTrendsBrand_Pur", "spend"=>761765.47, "clicks"=>1002153, "revenue"=>2489460.841692212, "roi"=>3.268}
+=====
+name: NDPA_NS_LABBSBuyers_Clearance_Pur
+spend: 959026.79
+clicks: 921778
+revenue: 2487829.4203221346
+roi: 2.5941
+{"name"=>"NDPA_NS_LABBSBuyers_Clearance_Pur", "spend"=>959026.79, "clicks"=>921778, "revenue"=>2487829.4203221346, "roi"=>2.5941}
+=====
+name: FBA_gt-All_t-AAA_ds-NA_Duplicate
+spend: 372083.28
+clicks: 1604346
+revenue: NULL
+roi: NULL
+{"name"=>"FBA_gt-All_t-AAA_ds-NA_Duplicate", "spend"=>372083.28, "clicks"=>1604346, "revenue"=>nil, "roi"=>nil}
+=====
+name: DPA_gt-All_t-AppCrosssellTraffic_ds-Lockdown
+spend: 79293.95999999999
+clicks: 213070
+revenue: 265690.49747092684
+roi: 3.3507
+{"name"=>"DPA_gt-All_t-AppCrosssellTraffic_ds-Lockdown", "spend"=>79293.95999999999, "clicks"=>213070, "revenue"=>265690.49747092684, "roi"=>3.3507}
+=====
+name: FBA_gt-all_t-AAA_ds_purchase_fb_sdk
+spend: 53084.39
+clicks: 44215
+revenue: NULL
+roi: NULL
+{"name"=>"FBA_gt-all_t-AAA_ds_purchase_fb_sdk", "spend"=>53084.39, "clicks"=>44215, "revenue"=>nil, "roi"=>nil}
+=====
+name: DPA_gt-All_t-AppCrosssell_ds-Lockdown
+spend: 4312401.79
+clicks: 2861600
+revenue: 11671449.407499902
+roi: 2.7065
+{"name"=>"DPA_gt-All_t-AppCrosssell_ds-Lockdown", "spend"=>4312401.79, "clicks"=>2861600, "revenue"=>11671449.407499902, "roi"=>2.7065}
+=====
+name: NV_gt-All_td-View0RBL0Upsell_ds-Lockdown
+spend: 585528.93
+clicks: 560936
+revenue: NULL
+roi: NULL
+{"name"=>"NV_gt-All_td-View0RBL0Upsell_ds-Lockdown", "spend"=>585528.93, "clicks"=>560936, "revenue"=>nil, "roi"=>nil}
+=====
+name: DPA_gt-M_t-AppA2C_ds-Lockdown_D_CBO
+spend: 551021.38
+clicks: 436052
+revenue: 1732114.0288277434
+roi: 3.1435
+{"name"=>"DPA_gt-M_t-AppA2C_ds-Lockdown_D_CBO", "spend"=>551021.38, "clicks"=>436052, "revenue"=>1732114.0288277434, "roi"=>3.1435}
+=====

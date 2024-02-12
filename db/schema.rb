@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_02_07_081639) do
+ActiveRecord::Schema[7.1].define(version: 2024_02_09_103555) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -233,6 +233,18 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_07_081639) do
     t.index ["account_id", "id"], name: "index_campaign_dimensions_on_account_id_and_id", unique: true
     t.index ["account_id", "name"], name: "index_campaign_dimensions_on_account_id_and_name"
     t.index ["id"], name: "index_campaign_dimensions_on_id", unique: true
+  end
+
+  create_table "google_revenues", force: :cascade do |t|
+    t.string "account_id"
+    t.string "campaign_id"
+    t.string "adset_id"
+    t.string "ad_id"
+    t.float "revenue"
+    t.datetime "event_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id", "campaign_id", "adset_id", "ad_id", "event_date"], name: "idx_on_account_id_campaign_id_adset_id_ad_id_event__41b185a3b2", unique: true
   end
 
   create_table "users", force: :cascade do |t|

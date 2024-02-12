@@ -20,9 +20,8 @@ class GA_Ingester
       ad_id = nil
 
       insert = false
-      # Process records with 'name' and ensure it's not null or empty
       if !name.blank?
-        ad = AdDimensions.find_by(name: name)
+        ad = AdDimensions.find_by(name: name, adset_name: adset_name, campaign_name: campaign_name)
         if ad.present?
           account_id = ad.account_id
           campaign_id = ad.campaign_id
@@ -30,16 +29,16 @@ class GA_Ingester
           ad_id = ad.id
           insert = true
         end
-      # Similar logic for 'adset_name', checking for presence
+        # Similar logic for 'adset_name', checking for presence
       elsif !adset_name.blank?
-        adset = AdsetDimensions.find_by(name: adset_name)
+        adset = AdsetDimensions.find_by(name: adset_name, campaign_name: campaign_name)
         if adset.present?
           account_id = adset.account_id
           campaign_id = adset.campaign_id
           adset_id = adset.id
           insert = true
         end
-      # Similar logic for 'campaign_name', checking for presence
+        # Similar logic for 'campaign_name', checking for presence
       elsif !campaign_name.blank?
         campaign = CampaignDimensions.find_by(name: campaign_name)
         if campaign.present?
