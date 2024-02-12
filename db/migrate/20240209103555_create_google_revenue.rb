@@ -8,6 +8,8 @@ class CreateGoogleRevenue < ActiveRecord::Migration[7.1]
       t.float         :revenue
       t.datetime      :event_date
       t.timestamps
+
+      t.index [:account_id, :campaign_id, :adset_id, :ad_id, :event_date], unique: true
     end
   end
 end

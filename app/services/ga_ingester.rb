@@ -14,7 +14,6 @@ class GA_Ingester
       revenue = row['revenue']
       event_date = row['event_date']
 
-
       account_id = nil
       campaign_id = nil
       adset_id = nil
@@ -28,7 +27,7 @@ class GA_Ingester
           account_id = ad.account_id
           campaign_id = ad.campaign_id
           adset_id = ad.adset_id
-          ad_id = ad.ad_id
+          ad_id = ad.id
           insert = true
         end
       # Similar logic for 'adset_name', checking for presence
@@ -37,7 +36,7 @@ class GA_Ingester
         if adset.present?
           account_id = adset.account_id
           campaign_id = adset.campaign_id
-          adset_id = adset.adset_id
+          adset_id = adset.id
           insert = true
         end
       # Similar logic for 'campaign_name', checking for presence
@@ -45,21 +44,25 @@ class GA_Ingester
         campaign = CampaignDimensions.find_by(name: campaign_name)
         if campaign.present?
           account_id = campaign.account_id
-          campaign_id = campaign.campaign_id
+          campaign_id = campaign.id
           insert = true
         end
       end
 
       if insert
-        ga_revenue.push({
+        row = {
           account_id:,
           campaign_id:,
           adset_id:,
           ad_id:,
           event_date:,
-          revenue: reveue.to_f
-        })
+          revenue: revenue.to_f
+        }
+
+        ga_revenue.push(row)
       end
     end
+
+    GoogleRevenues.upsert_all(ga_revenue)
   end
 end
